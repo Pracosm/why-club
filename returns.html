@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>WhÿClub — Returns & Exchange</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; -webkit-text-size-adjust: 100%; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #fff; color: #111;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    a { text-decoration: none; color: inherit; }
+    button { cursor: pointer; font-family: inherit; border: none; background: none; outline: none; }
+
+    :root {
+      --red: #E00000;
+      --black: #111111;
+      --white: #ffffff;
+      --off: #F6F6F4;
+      --border: #EBEBEB;
+      --mid: #888888;
+    }
+
+    .hdr {
+      position: sticky; top: 0;
+      z-index: 200; height: 52px;
+      background: rgba(255,255,255,0.96);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center;
+      padding: 0 18px;
+    }
+    .hdr__back {
+      font-size: 14px; font-weight: 600;
+      display: flex; align-items: center; gap: 6px;
+      color: var(--black);
+      min-width: 44px; min-height: 44px;
+    }
+
+    /* ── Hero ── */
+    .page-hero {
+      padding: 60px 24px 40px;
+      background: var(--black); color: #fff;
+      text-align: center;
+    }
+    .page-hero__eyebrow {
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--red); margin-bottom: 16px;
+    }
+    .page-hero__title {
+      font-size: clamp(32px, 9vw, 48px);
+      font-weight: 900; letter-spacing: -0.05em;
+      text-transform: lowercase; line-height: 0.9;
+      margin-bottom: 14px;
+    }
+    .page-hero__sub {
+      font-size: 13px; color: rgba(255,255,255,0.4);
+      line-height: 1.7; max-width: 300px; margin: 0 auto;
+    }
+
+    /* ── Highlights ── */
+    .highlights {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      border-bottom: 1px solid var(--border);
+    }
+    .hl {
+      padding: 24px 12px;
+      text-align: center;
+      border-right: 1px solid var(--border);
+    }
+    .hl:last-child { border-right: none; }
+    .hl__val {
+      font-size: 24px; font-weight: 900;
+      letter-spacing: -0.04em; margin-bottom: 4px;
+    }
+    .hl__label {
+      font-size: 9px; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--mid);
+    }
+
+    /* ── Steps ── */
+    .steps {
+      padding: 40px 24px;
+    }
+    .steps__title {
+      font-size: 10px; font-weight: 800;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--red); margin-bottom: 28px;
+    }
+    .step {
+      display: flex; gap: 16px;
+      padding-bottom: 28px; margin-bottom: 28px;
+      border-bottom: 1px solid var(--border);
+    }
+    .step:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .step__num {
+      font-size: 32px; font-weight: 900;
+      color: var(--border);
+      line-height: 1; flex-shrink: 0;
+      width: 40px;
+    }
+    .step__content { flex: 1; }
+    .step__name {
+      font-size: 16px; font-weight: 800;
+      letter-spacing: -0.02em;
+      text-transform: lowercase;
+      margin-bottom: 6px;
+    }
+    .step__desc {
+      font-size: 13px; line-height: 1.7;
+      color: var(--mid);
+    }
+
+    /* ── Policy sections ── */
+    .policy {
+      padding: 40px 24px;
+      border-top: 1px solid var(--border);
+    }
+    .policy--dark {
+      background: var(--off);
+    }
+    .policy__title {
+      font-size: 10px; font-weight: 800;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--red); margin-bottom: 20px;
+    }
+    .policy__heading {
+      font-size: 22px; font-weight: 900;
+      letter-spacing: -0.03em;
+      text-transform: lowercase;
+      margin-bottom: 16px;
+    }
+    .policy__text {
+      font-size: 13px; line-height: 1.8;
+      color: #555;
+    }
+    .policy__list {
+      list-style: none; padding: 0;
+    }
+    .policy__list li {
+      font-size: 13px; line-height: 1.8;
+      color: #555;
+      padding-left: 16px;
+      position: relative;
+      margin-bottom: 4px;
+    }
+    .policy__list li::before {
+      content: '→';
+      position: absolute; left: 0;
+      color: var(--red);
+      font-weight: 700;
+    }
+
+    /* ── Eligible / Not eligible ── */
+    .eligibility {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      padding: 0 24px 40px;
+    }
+    .elig-card {
+      padding: 20px;
+      border-radius: 10px;
+    }
+    .elig-card--yes { background: #f0faf0; }
+    .elig-card--no  { background: #faf0f0; }
+    .elig-card__icon { font-size: 20px; margin-bottom: 10px; }
+    .elig-card__title {
+      font-size: 11px; font-weight: 800;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .elig-card--yes .elig-card__title { color: #2a7a2a; }
+    .elig-card--no .elig-card__title  { color: var(--red); }
+    .elig-card__list {
+      list-style: none; padding: 0;
+    }
+    .elig-card__list li {
+      font-size: 11px; line-height: 1.8;
+      color: #555;
+    }
+
+    /* ── CTA banner ── */
+    .ret-cta {
+      padding: 50px 24px;
+      background: var(--black); color: #fff;
+      text-align: center;
+    }
+    .ret-cta__heading {
+      font-size: 24px; font-weight: 900;
+      letter-spacing: -0.04em;
+      text-transform: lowercase;
+      margin-bottom: 10px;
+    }
+    .ret-cta__sub {
+      font-size: 13px; color: rgba(255,255,255,0.4);
+      line-height: 1.6; margin-bottom: 24px;
+      max-width: 280px; margin-left: auto; margin-right: auto;
+    }
+    .ret-cta__btns {
+      display: flex; flex-direction: column;
+      gap: 10px; align-items: center;
+    }
+    .ret-cta__btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 14px 28px;
+      font-size: 12px; font-weight: 800;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      border-radius: 9999px;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform .15s;
+    }
+    .ret-cta__btn:active { transform: scale(0.97); }
+    .ret-cta__btn--primary { background: #fff; color: var(--black); }
+    .ret-cta__btn--secondary {
+      background: none; color: rgba(255,255,255,0.5);
+      border: 1.5px solid rgba(255,255,255,0.15);
+    }
+
+    /* ── Footer ── */
+    .page-footer {
+      padding: 24px;
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+    .page-footer__copy {
+      font-size: 10px; color: var(--mid);
+      letter-spacing: 0.1em; text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+
+<header class="hdr">
+  <a class="hdr__back" href="index-v5.html">← back</a>
+</header>
+
+<section class="page-hero">
+  <div class="page-hero__eyebrow">hassle-free</div>
+  <h1 class="page-hero__title">returns &<br>exchange</h1>
+  <p class="page-hero__sub">didn't work out? no stress. we've made returns as easy as ordering.</p>
+</section>
+
+<!-- Highlights -->
+<div class="highlights">
+  <div class="hl">
+    <div class="hl__val">7</div>
+    <div class="hl__label">day window</div>
+  </div>
+  <div class="hl">
+    <div class="hl__val">free</div>
+    <div class="hl__label">return pickup</div>
+  </div>
+  <div class="hl">
+    <div class="hl__val">3-5</div>
+    <div class="hl__label">day refund</div>
+  </div>
+</div>
+
+<!-- How it works -->
+<div class="steps">
+  <div class="steps__title">how it works</div>
+  <div class="step">
+    <div class="step__num">01</div>
+    <div class="step__content">
+      <div class="step__name">reach out to us</div>
+      <div class="step__desc">drop us a message on whatsapp or email within 7 days of delivery with your order id and reason.</div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step__num">02</div>
+    <div class="step__content">
+      <div class="step__name">we schedule a pickup</div>
+      <div class="step__desc">once approved, our courier partner will pick up the item from your doorstep. no need to go anywhere.</div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step__num">03</div>
+    <div class="step__content">
+      <div class="step__name">get your refund or exchange</div>
+      <div class="step__desc">refund to original payment method within 3-5 business days. exchanges ship out as soon as we receive the return.</div>
+    </div>
+  </div>
+</div>
+
+<!-- Eligibility -->
+<div class="eligibility">
+  <div class="elig-card elig-card--yes">
+    <div class="elig-card__icon">✓</div>
+    <div class="elig-card__title">eligible</div>
+    <ul class="elig-card__list">
+      <li>unworn items</li>
+      <li>tags attached</li>
+      <li>within 7 days</li>
+      <li>original packaging</li>
+      <li>wrong size</li>
+      <li>defective product</li>
+    </ul>
+  </div>
+  <div class="elig-card elig-card--no">
+    <div class="elig-card__icon">✕</div>
+    <div class="elig-card__title">not eligible</div>
+    <ul class="elig-card__list">
+      <li>worn or washed</li>
+      <li>tags removed</li>
+      <li>after 7 days</li>
+      <li>sale items</li>
+      <li>altered items</li>
+      <li>stained or damaged</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Return policy details -->
+<div class="policy policy--dark">
+  <div class="policy__title">return policy</div>
+  <div class="policy__heading">the full details</div>
+  <ul class="policy__list">
+    <li>returns are accepted within 7 days from the date of delivery</li>
+    <li>items must be in original condition — unworn, unwashed, with all tags intact</li>
+    <li>return shipping is free for all orders within india</li>
+    <li>refunds are processed within 3-5 business days after we receive the item</li>
+    <li>refunds go back to the original payment method (UPI, card, or wallet)</li>
+    <li>COD orders are refunded via bank transfer — we'll ask for your details</li>
+  </ul>
+</div>
+
+<div class="policy">
+  <div class="policy__title">exchange policy</div>
+  <div class="policy__heading">need a different size?</div>
+  <ul class="policy__list">
+    <li>size exchanges are free — we'll ship the new size as soon as we get the return</li>
+    <li>exchanges are subject to stock availability</li>
+    <li>if the requested size is out of stock, we'll process a full refund instead</li>
+    <li>you can only exchange for a different size of the same product</li>
+    <li>want a completely different product? return the original and place a new order</li>
+  </ul>
+</div>
+
+<div class="policy policy--dark">
+  <div class="policy__title">damaged or defective?</div>
+  <div class="policy__heading">we've got you</div>
+  <ul class="policy__list">
+    <li>received a damaged or defective item? we're sorry — let us fix it</li>
+    <li>send us photos of the issue within 48 hours of delivery</li>
+    <li>we'll ship a replacement immediately — no need to return the damaged piece first</li>
+    <li>if replacement stock isn't available, full refund within 2 business days</li>
+  </ul>
+</div>
+
+<!-- CTA -->
+<section class="ret-cta">
+  <div class="ret-cta__heading">need to start a return?</div>
+  <p class="ret-cta__sub">reach out and we'll sort it within minutes. no bots, no forms, just humans.</p>
+  <div class="ret-cta__btns">
+    <a class="ret-cta__btn ret-cta__btn--primary" href="https://wa.me/919999999999"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12.05 21.785h-.01a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.981.998-3.648-.235-.374A9.86 9.86 0 012.15 12.01C2.15 6.558 6.587 2.122 12.05 2.122c2.647 0 5.137 1.033 7.007 2.907a9.834 9.834 0 012.9 7.002c-.003 5.453-4.438 9.888-9.907 9.888v-.134zm0-21.78C5.495.005.005 5.488 0 12.005a11.96 11.96 0 001.604 5.983L0 24l6.166-1.617A11.94 11.94 0 0012.05 24c6.517 0 11.95-5.322 11.95-11.995C24 5.493 18.567.005 12.05.005z"/></svg> whatsapp us</a>
+    <a class="ret-cta__btn ret-cta__btn--secondary" href="mailto:hello@whyclub.in"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 4L12 13 2 4"/></svg> email us</a>
+  </div>
+</section>
+
+<footer class="page-footer">
+  <div class="page-footer__copy">© 2026 whÿclub — perfect is boring</div>
+</footer>
+
+</body>
+</html>

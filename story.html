@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>WhÿClub — Our Story</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; -webkit-text-size-adjust: 100%; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #fff; color: #111;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    a { text-decoration: none; color: inherit; }
+    img { display: block; width: 100%; }
+
+    :root {
+      --red: #E00000;
+      --black: #111;
+      --off: #F6F6F4;
+      --border: #EBEBEB;
+      --mid: #888;
+    }
+
+    /* ── Back button ── */
+    .back {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 200; height: 52px;
+      display: flex; align-items: center;
+      padding: 0 18px;
+      mix-blend-mode: difference;
+    }
+    .back a {
+      font-size: 13px; font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.04em;
+      min-width: 44px; min-height: 44px;
+      display: flex; align-items: center; gap: 6px;
+    }
+
+    /* ══════════════════════════════
+       HERO — full viewport
+    ══════════════════════════════ */
+    .hero {
+      height: 100dvh; min-height: 600px;
+      background: var(--black);
+      color: #fff;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 0 28px;
+      position: relative; overflow: hidden;
+    }
+    .hero__bg {
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 30% 40%, rgba(224,0,0,0.08), transparent 60%),
+                  radial-gradient(ellipse at 70% 70%, rgba(100,0,200,0.06), transparent 50%);
+      pointer-events: none;
+    }
+    .hero__eyebrow {
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 0.35em; text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 28px;
+      position: relative;
+      opacity: 0; animation: heroIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.15s forwards;
+    }
+    .hero__title {
+      font-size: clamp(52px, 15vw, 90px);
+      font-weight: 900; letter-spacing: -0.06em;
+      text-transform: lowercase; line-height: 0.82;
+      margin-bottom: 24px;
+      position: relative;
+      opacity: 0; animation: heroIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.3s forwards;
+    }
+    .hero__title .acc { color: var(--red); }
+    .hero__sub {
+      font-size: 15px; font-weight: 400;
+      color: rgba(255,255,255,0.4);
+      line-height: 1.75; max-width: 300px;
+      position: relative;
+      opacity: 0; animation: heroIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.45s forwards;
+    }
+    .hero__line {
+      width: 1px; height: 60px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.15), transparent);
+      position: absolute; bottom: 40px;
+      animation: heroIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.6s forwards;
+      opacity: 0;
+    }
+    @keyframes heroIn {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ══════════════════════════════
+       MARQUEE
+    ══════════════════════════════ */
+    .marquee {
+      padding: 16px 0;
+      overflow: hidden;
+      background: var(--red);
+      white-space: nowrap;
+    }
+    .marquee__track {
+      display: flex; gap: 0;
+      animation: marquee 12s linear infinite;
+    }
+    .marquee__item {
+      font-size: 11px; font-weight: 800;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: #fff;
+      padding: 0 24px;
+      flex-shrink: 0;
+    }
+    @keyframes marquee { to { transform: translateX(-50%); } }
+
+    /* ══════════════════════════════
+       EDITORIAL BLOCKS
+    ══════════════════════════════ */
+
+    /* Split — image left, text right (stacked on mobile) */
+    .split {
+      display: flex; flex-direction: column;
+    }
+    .split--reverse { flex-direction: column; }
+    .split__img {
+      width: 100%; aspect-ratio: 1;
+      overflow: hidden;
+    }
+    .split__img img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center 20%;
+      transition: transform 6s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .split__img.visible img { transform: scale(1.06); }
+    .split__text {
+      padding: 48px 28px;
+      display: flex; flex-direction: column;
+      justify-content: center;
+    }
+    .split__text--dark { background: var(--black); color: #fff; }
+    .split__num {
+      font-size: 10px; font-weight: 800;
+      letter-spacing: 0.25em;
+      color: var(--red);
+      margin-bottom: 16px;
+    }
+    .split__heading {
+      font-size: clamp(30px, 9vw, 48px);
+      font-weight: 900; letter-spacing: -0.05em;
+      text-transform: lowercase; line-height: 0.92;
+      margin-bottom: 18px;
+    }
+    .split__body {
+      font-size: 14px; font-weight: 400;
+      line-height: 1.85; color: #666;
+      max-width: 380px;
+    }
+    .split__text--dark .split__body { color: rgba(255,255,255,0.4); }
+
+    /* ── Full-bleed image with text overlay ── */
+    .full-visual {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 3 / 4;
+      overflow: hidden;
+    }
+    .full-visual img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center 25%;
+    }
+    .full-visual__overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 55%);
+      display: flex; flex-direction: column;
+      justify-content: flex-end;
+      padding: 32px 24px;
+      color: #fff;
+    }
+    .full-visual__label {
+      font-size: 9px; font-weight: 800;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--red); margin-bottom: 8px;
+    }
+    .full-visual__name {
+      font-size: 28px; font-weight: 900;
+      letter-spacing: -0.04em;
+      text-transform: lowercase; line-height: 1;
+      margin-bottom: 6px;
+    }
+    .full-visual__desc {
+      font-size: 12px; line-height: 1.65;
+      color: rgba(255,255,255,0.55);
+      max-width: 280px;
+    }
+
+    /* ── Quote ── */
+    .quote {
+      padding: 80px 28px;
+      background: var(--black); color: #fff;
+      text-align: center;
+      position: relative;
+    }
+    .quote::before {
+      content: '"';
+      position: absolute;
+      top: 30px; left: 50%;
+      transform: translateX(-50%);
+      font-size: 120px; font-weight: 900;
+      color: rgba(224,0,0,0.08);
+      line-height: 1;
+    }
+    .quote__text {
+      font-size: clamp(22px, 6.5vw, 34px);
+      font-weight: 800; letter-spacing: -0.04em;
+      text-transform: lowercase; line-height: 1.2;
+      margin-bottom: 20px;
+      position: relative;
+    }
+    .quote__attr {
+      font-size: 10px; font-weight: 600;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: rgba(255,255,255,0.25);
+    }
+
+    /* ── Numbers ── */
+    .numbers {
+      display: grid; grid-template-columns: repeat(2, 1fr);
+      border-top: 1px solid var(--border);
+    }
+    .num {
+      padding: 32px 20px;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .num:nth-child(2n) { border-right: none; }
+    .num__val {
+      font-size: 40px; font-weight: 900;
+      letter-spacing: -0.05em;
+      margin-bottom: 4px;
+    }
+    .num__val .red { color: var(--red); }
+    .num__label {
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--mid); line-height: 1.5;
+    }
+
+    /* ── Values ── */
+    .values {
+      padding: 56px 24px;
+      background: var(--black); color: #fff;
+    }
+    .values__eyebrow {
+      font-size: 10px; font-weight: 800;
+      letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--red);
+      margin-bottom: 36px;
+      text-align: center;
+    }
+    .val {
+      padding: 24px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      display: flex; gap: 18px; align-items: flex-start;
+    }
+    .val:last-child { border-bottom: none; }
+    .val__num {
+      font-size: 11px; font-weight: 800;
+      color: rgba(255,255,255,0.15);
+      letter-spacing: 0.06em;
+      padding-top: 3px;
+      flex-shrink: 0; width: 24px;
+    }
+    .val__content { flex: 1; }
+    .val__name {
+      font-size: 17px; font-weight: 800;
+      letter-spacing: -0.02em;
+      text-transform: lowercase;
+      margin-bottom: 6px;
+    }
+    .val__desc {
+      font-size: 13px; line-height: 1.7;
+      color: rgba(255,255,255,0.35);
+    }
+
+    /* ── CTA ── */
+    .cta {
+      padding: 80px 28px;
+      text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .cta__bg {
+      position: absolute; inset: 0;
+      background: var(--off);
+      z-index: 0;
+    }
+    .cta__inner { position: relative; z-index: 1; }
+    .cta__eyebrow {
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--red); margin-bottom: 20px;
+    }
+    .cta__heading {
+      font-size: clamp(36px, 11vw, 56px);
+      font-weight: 900; letter-spacing: -0.06em;
+      text-transform: lowercase; line-height: 0.88;
+      margin-bottom: 16px;
+    }
+    .cta__sub {
+      font-size: 14px; color: var(--mid);
+      line-height: 1.7; max-width: 300px;
+      margin: 0 auto 32px;
+    }
+    .cta__btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--black); color: #fff;
+      font-size: 12px; font-weight: 800;
+      letter-spacing: 0.1em; text-transform: lowercase;
+      padding: 16px 32px;
+      border-radius: 9999px;
+      transition: transform .15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .cta__btn:active { transform: scale(0.97); }
+
+    /* ── Footer ── */
+    .story-footer {
+      padding: 20px 24px;
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+    .story-footer__social {
+      display: flex; gap: 16px; justify-content: center;
+      margin-bottom: 12px;
+    }
+    .story-footer__social a {
+      color: var(--mid); display: flex;
+      transition: color .15s;
+    }
+    .story-footer__copy {
+      font-size: 10px; color: var(--mid);
+      letter-spacing: 0.1em; text-transform: uppercase;
+    }
+
+    /* ── Scroll animations ── */
+    .reveal {
+      opacity: 0; transform: translateY(32px);
+      transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* staggered children */
+    .reveal-stagger > * {
+      opacity: 0; transform: translateY(20px);
+      transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .reveal-stagger.visible > *:nth-child(1) { opacity: 1; transform: translateY(0); transition-delay: 0s; }
+    .reveal-stagger.visible > *:nth-child(2) { opacity: 1; transform: translateY(0); transition-delay: 0.08s; }
+    .reveal-stagger.visible > *:nth-child(3) { opacity: 1; transform: translateY(0); transition-delay: 0.16s; }
+    .reveal-stagger.visible > *:nth-child(4) { opacity: 1; transform: translateY(0); transition-delay: 0.24s; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Back -->
+<nav class="back"><a href="index-v5.html">← back</a></nav>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <div class="hero__bg"></div>
+  <div class="hero__eyebrow">est. 2024 · mumbai</div>
+  <h1 class="hero__title">perfect<br>is<br><span class="acc">boring.</span></h1>
+  <p class="hero__sub">we didn't start whÿclub to make clothes. we started it because everything out there felt the same.</p>
+  <div class="hero__line"></div>
+</section>
+
+<!-- ═══ MARQUEE ═══ -->
+<div class="marquee">
+  <div class="marquee__track">
+    <span class="marquee__item">our story</span>
+    <span class="marquee__item">·</span>
+    <span class="marquee__item">perfect is boring</span>
+    <span class="marquee__item">·</span>
+    <span class="marquee__item">mumbai, india</span>
+    <span class="marquee__item">·</span>
+    <span class="marquee__item">100% cotton</span>
+    <span class="marquee__item">·</span>
+    <span class="marquee__item">feelings not briefs</span>
+    <span class="marquee__item">·</span>
+    <span class="marquee__item">our story</span>
+    <span class="marquee__item">·</span>
+    <span class="marquee__item">perfect is boring</span>
+    <span class="marquee__item">·</span>
+    <span class="marquee__item">mumbai, india</span>
+    <span class="marquee__item">·</span>
+    <span class="marquee__item">100% cotton</span>
+    <span class="marquee__item">·</span>
+    <span class="marquee__item">feelings not briefs</span>
+    <span class="marquee__item">·</span>
+  </div>
+</div>
+
+<!-- ═══ 01 — ORIGIN ═══ -->
+<div class="split">
+  <div class="split__img reveal">
+    <img src="tee-midnight.jpg" alt="midnight in mumbai" loading="lazy" />
+  </div>
+  <div class="split__text reveal-stagger reveal">
+    <div class="split__num">01 — THE ORIGIN</div>
+    <h2 class="split__heading">born from<br>boredom</h2>
+    <p class="split__body">in 2024, two friends in mumbai looked at their closets and saw nothing worth wearing. not because they had nothing — because nothing said anything. every brand was playing it safe. every tee was a template. so we asked: what if clothes actually had something to say?</p>
+  </div>
+</div>
+
+<!-- ═══ QUOTE ═══ -->
+<section class="quote reveal">
+  <div class="quote__text">we don't design for everyone. we design for the ones who get it.</div>
+  <div class="quote__attr">— founders, whÿclub</div>
+</section>
+
+<!-- ═══ 02 — PHILOSOPHY ═══ -->
+<div class="split split--reverse">
+  <div class="split__text split__text--dark reveal-stagger reveal">
+    <div class="split__num">02 — THE PHILOSOPHY</div>
+    <h2 class="split__heading">feelings,<br>not briefs</h2>
+    <p class="split__body">every whÿclub piece starts with a feeling. not a trend report. not a pinterest mood board. a real, raw, human feeling. that's why midnight in mumbai exists — because 3am on marine drive is a state of mind. that's why bad touch exists — because some things don't need explaining.</p>
+  </div>
+  <div class="split__img reveal">
+    <img src="tee-badtouch.jpg" alt="bad touch" loading="lazy" />
+  </div>
+</div>
+
+<!-- ═══ PRODUCT VISUAL ═══ -->
+<div class="full-visual reveal">
+  <img src="tee-star-new.png" alt="please i'm a star" loading="lazy" />
+  <div class="full-visual__overlay">
+    <div class="full-visual__label">drop 01</div>
+    <div class="full-visual__name">please i'm a star</div>
+    <div class="full-visual__desc">star-burst graphic on cream. a reminder that everyone who needs to know — already knows.</div>
+  </div>
+</div>
+
+<!-- ═══ 03 — CRAFT ═══ -->
+<div class="split">
+  <div class="split__text reveal-stagger reveal">
+    <div class="split__num">03 — THE CRAFT</div>
+    <h2 class="split__heading">heavyweight<br>or nothing</h2>
+    <p class="split__body">240-280gsm. 100% cotton. oversized cuts that actually drape right. we spent months getting the weight, the wash, the stitching right. if the fabric doesn't feel like it costs more than it does, the graphic on top doesn't matter.</p>
+  </div>
+  <div class="split__img reveal">
+    <img src="tee-midnight.jpg" alt="fabric detail" loading="lazy" />
+  </div>
+</div>
+
+<!-- ═══ NUMBERS ═══ -->
+<div class="numbers reveal">
+  <div class="num">
+    <div class="num__val">240<span class="red">+</span></div>
+    <div class="num__label">gsm heavyweight<br>cotton</div>
+  </div>
+  <div class="num">
+    <div class="num__val">100<span class="red">%</span></div>
+    <div class="num__label">pure cotton,<br>no blends</div>
+  </div>
+  <div class="num">
+    <div class="num__val">3</div>
+    <div class="num__label">drops and<br>counting</div>
+  </div>
+  <div class="num">
+    <div class="num__val">1</div>
+    <div class="num__label">city where it<br>all started</div>
+  </div>
+</div>
+
+<!-- ═══ VALUES ═══ -->
+<section class="values reveal">
+  <div class="values__eyebrow">what we stand for</div>
+  <div class="val">
+    <div class="val__num">01</div>
+    <div class="val__content">
+      <div class="val__name">no trend chasing</div>
+      <div class="val__desc">we'd rather be late to a trend than early to something we don't believe in. every piece has a reason.</div>
+    </div>
+  </div>
+  <div class="val">
+    <div class="val__num">02</div>
+    <div class="val__content">
+      <div class="val__name">quality is non-negotiable</div>
+      <div class="val__desc">heavyweight cotton, premium washes, graphics that don't crack after two washes. this is the baseline, not the selling point.</div>
+    </div>
+  </div>
+  <div class="val">
+    <div class="val__num">03</div>
+    <div class="val__content">
+      <div class="val__name">made in india, for real</div>
+      <div class="val__desc">designed, printed, stitched, shipped — all from india. not a gimmick. because this is home and the talent here is world-class.</div>
+    </div>
+  </div>
+  <div class="val">
+    <div class="val__num">04</div>
+    <div class="val__content">
+      <div class="val__name">community over clout</div>
+      <div class="val__desc">we're not building a brand for influencers. we're building it for the kid in bangalore who wears our tee to college and gets asked "where'd you get that?"</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SECOND QUOTE ═══ -->
+<section class="quote reveal">
+  <div class="quote__text">the best marketing is someone wearing your tee and a stranger saying "that's hard."</div>
+  <div class="quote__attr">— whÿclub</div>
+</section>
+
+<!-- ═══ CTA ═══ -->
+<section class="cta reveal">
+  <div class="cta__bg"></div>
+  <div class="cta__inner reveal-stagger">
+    <div class="cta__eyebrow">join the club</div>
+    <h2 class="cta__heading">ready to<br>wear the<br>why<span style="color:var(--red)">?</span></h2>
+    <p class="cta__sub">wear something that actually means something.</p>
+    <a class="cta__btn" href="index-v5.html">shop the collection →</a>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="story-footer">
+  <div class="story-footer__social">
+    <a href="https://instagram.com/whyclub.in" target="_blank" aria-label="Instagram"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg></a>
+    <a href="https://twitter.com/whyclub" target="_blank" aria-label="Twitter"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+    <a href="https://wa.me/919999999999" target="_blank" aria-label="WhatsApp"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12.05 21.785h-.01a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.981.998-3.648-.235-.374A9.86 9.86 0 012.15 12.01C2.15 6.558 6.587 2.122 12.05 2.122c2.647 0 5.137 1.033 7.007 2.907a9.834 9.834 0 012.9 7.002c-.003 5.453-4.438 9.888-9.907 9.888v-.134zm0-21.78C5.495.005.005 5.488 0 12.005a11.96 11.96 0 001.604 5.983L0 24l6.166-1.617A11.94 11.94 0 0012.05 24c6.517 0 11.95-5.322 11.95-11.995C24 5.493 18.567.005 12.05.005z"/></svg></a>
+  </div>
+  <div class="story-footer__copy">© 2026 whÿclub — perfect is boring</div>
+</footer>
+
+<script>
+  // Intersection observer for reveals
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('.reveal, .reveal-stagger, .split__img').forEach(el => io.observe(el));
+</script>
+</body>
+</html>

@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>WhÿClub — Contact Us</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; -webkit-text-size-adjust: 100%; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #fff; color: #111;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    a { text-decoration: none; color: inherit; }
+    button { cursor: pointer; font-family: inherit; border: none; background: none; outline: none; }
+
+    :root {
+      --red: #E00000;
+      --black: #111111;
+      --white: #ffffff;
+      --off: #F6F6F4;
+      --border: #EBEBEB;
+      --mid: #888888;
+    }
+
+    /* ── Header ── */
+    .hdr {
+      position: sticky; top: 0;
+      z-index: 200; height: 52px;
+      background: rgba(255,255,255,0.96);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center;
+      padding: 0 18px;
+    }
+    .hdr__back {
+      font-size: 14px; font-weight: 600;
+      display: flex; align-items: center; gap: 6px;
+      color: var(--black);
+      min-width: 44px; min-height: 44px;
+    }
+
+    /* ── Hero ── */
+    .page-hero {
+      padding: 60px 24px 40px;
+      background: var(--black); color: #fff;
+      text-align: center;
+    }
+    .page-hero__eyebrow {
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 0.3em; text-transform: uppercase;
+      color: var(--red); margin-bottom: 16px;
+    }
+    .page-hero__title {
+      font-size: clamp(36px, 10vw, 52px);
+      font-weight: 900; letter-spacing: -0.05em;
+      text-transform: lowercase; line-height: 0.9;
+      margin-bottom: 14px;
+    }
+    .page-hero__sub {
+      font-size: 13px; color: rgba(255,255,255,0.4);
+      line-height: 1.7; max-width: 300px; margin: 0 auto;
+    }
+
+    /* ── Quick links ── */
+    .quick {
+      display: grid; grid-template-columns: 1fr 1fr;
+      border-bottom: 1px solid var(--border);
+    }
+    .quick__item {
+      padding: 22px 20px;
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      text-align: center;
+      -webkit-tap-highlight-color: transparent;
+      transition: background .15s;
+    }
+    .quick__item:nth-child(2n) { border-right: none; }
+    .quick__item:active { background: var(--off); }
+    .quick__icon { font-size: 22px; margin-bottom: 8px; }
+    .quick__label {
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .quick__sub {
+      font-size: 10px; color: var(--mid); margin-top: 3px;
+    }
+
+    /* ── Form ── */
+    .form-section {
+      padding: 40px 24px;
+    }
+    .form-title {
+      font-size: 10px; font-weight: 800;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--red); margin-bottom: 24px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-label {
+      display: block;
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--mid); margin-bottom: 8px;
+    }
+    .form-input,
+    .form-select,
+    .form-textarea {
+      width: 100%;
+      font-family: 'Inter', sans-serif;
+      font-size: 15px; font-weight: 500;
+      color: var(--black);
+      padding: 14px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      background: #fff;
+      transition: border-color .2s;
+      -webkit-appearance: none;
+    }
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+      border-color: var(--black);
+      outline: none;
+    }
+    .form-input::placeholder,
+    .form-textarea::placeholder { color: #ccc; }
+    .form-textarea { resize: vertical; min-height: 120px; }
+    .form-select {
+      background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23888' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+      padding-right: 40px;
+    }
+    .form-submit {
+      width: 100%; height: 54px;
+      background: var(--black); color: #fff;
+      font-size: 13px; font-weight: 800;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      border-radius: 8px;
+      transition: transform .15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .form-submit:active { transform: scale(0.98); }
+
+    /* ── FAQ ── */
+    .faq-section {
+      padding: 0 24px 40px;
+    }
+    .faq-title {
+      font-size: 10px; font-weight: 800;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--red); margin-bottom: 20px;
+    }
+    .faq {
+      border-top: 1px solid var(--border);
+    }
+    .faq__item {
+      border-bottom: 1px solid var(--border);
+    }
+    .faq__q {
+      display: flex; align-items: center; justify-content: space-between;
+      width: 100%;
+      padding: 16px 0;
+      font-size: 14px; font-weight: 700;
+      letter-spacing: -0.01em;
+      text-align: left;
+      color: var(--black);
+      -webkit-tap-highlight-color: transparent;
+    }
+    .faq__q::after {
+      content: '+';
+      font-size: 18px; font-weight: 400;
+      color: var(--mid);
+      transition: transform .25s;
+      flex-shrink: 0; margin-left: 12px;
+    }
+    .faq__item.open .faq__q::after {
+      transform: rotate(45deg);
+    }
+    .faq__a {
+      max-height: 0; overflow: hidden;
+      transition: max-height .35s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .faq__item.open .faq__a { max-height: 200px; }
+    .faq__a-inner {
+      padding: 0 0 16px;
+      font-size: 13px; line-height: 1.7;
+      color: var(--mid);
+    }
+
+    /* ── Footer ── */
+    .page-footer {
+      padding: 24px;
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+    .page-footer__copy {
+      font-size: 10px; color: var(--mid);
+      letter-spacing: 0.1em; text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+
+<header class="hdr">
+  <a class="hdr__back" href="index-v5.html">← back</a>
+</header>
+
+<section class="page-hero">
+  <div class="page-hero__eyebrow">get in touch</div>
+  <h1 class="page-hero__title">talk to us</h1>
+  <p class="page-hero__sub">got a question, need help with an order, or just want to say hi? we're here.</p>
+</section>
+
+<!-- Quick contact -->
+<div class="quick">
+  <a class="quick__item" href="mailto:hello@whyclub.in">
+    <div class="quick__icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 4L12 13 2 4"/></svg></div>
+    <div class="quick__label">email</div>
+    <div class="quick__sub">hello@whyclub.in</div>
+  </a>
+  <a class="quick__item" href="https://instagram.com/whyclub.in" target="_blank">
+    <div class="quick__icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg></div>
+    <div class="quick__label">instagram</div>
+    <div class="quick__sub">@whyclub.in</div>
+  </a>
+  <a class="quick__item" href="https://wa.me/919999999999" target="_blank">
+    <div class="quick__icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12.05 21.785h-.01a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.981.998-3.648-.235-.374A9.86 9.86 0 012.15 12.01C2.15 6.558 6.587 2.122 12.05 2.122c2.647 0 5.137 1.033 7.007 2.907a9.834 9.834 0 012.9 7.002c-.003 5.453-4.438 9.888-9.907 9.888v-.134zm0-21.78C5.495.005.005 5.488 0 12.005a11.96 11.96 0 001.604 5.983L0 24l6.166-1.617A11.94 11.94 0 0012.05 24c6.517 0 11.95-5.322 11.95-11.995C24 5.493 18.567.005 12.05.005z"/></svg></div>
+    <div class="quick__label">whatsapp</div>
+    <div class="quick__sub">chat with us</div>
+  </a>
+  <div class="quick__item">
+    <div class="quick__icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+    <div class="quick__label">response time</div>
+    <div class="quick__sub">within 24 hours</div>
+  </div>
+</div>
+
+<!-- Contact form -->
+<div class="form-section">
+  <div class="form-title">send us a message</div>
+  <form id="contactForm">
+    <div class="form-group">
+      <label class="form-label">name</label>
+      <input class="form-input" type="text" placeholder="your name" required />
+    </div>
+    <div class="form-group">
+      <label class="form-label">email</label>
+      <input class="form-input" type="email" placeholder="you@email.com" required />
+    </div>
+    <div class="form-group">
+      <label class="form-label">topic</label>
+      <select class="form-select" required>
+        <option value="" disabled selected>select a topic</option>
+        <option>order issue</option>
+        <option>returns & exchange</option>
+        <option>sizing help</option>
+        <option>collaboration</option>
+        <option>wholesale inquiry</option>
+        <option>just saying hi</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">order id (optional)</label>
+      <input class="form-input" type="text" placeholder="#WHY-00000" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">message</label>
+      <textarea class="form-textarea" placeholder="tell us what's up..." required></textarea>
+    </div>
+    <button class="form-submit" type="submit">send message</button>
+  </form>
+</div>
+
+<!-- FAQ -->
+<div class="faq-section">
+  <div class="faq-title">common questions</div>
+  <div class="faq">
+    <div class="faq__item">
+      <button class="faq__q">how long does shipping take?</button>
+      <div class="faq__a"><div class="faq__a-inner">metro cities: 3-5 business days. rest of india: 5-7 business days. we ship via delhivery and bluedart.</div></div>
+    </div>
+    <div class="faq__item">
+      <button class="faq__q">do you offer cash on delivery?</button>
+      <div class="faq__a"><div class="faq__a-inner">yes! COD is available across india. prepaid orders get free shipping though — just saying.</div></div>
+    </div>
+    <div class="faq__item">
+      <button class="faq__q">what's your return policy?</button>
+      <div class="faq__a"><div class="faq__a-inner">7-day hassle-free returns from delivery. the item must be unworn, unwashed, with tags intact. check our returns page for full details.</div></div>
+    </div>
+    <div class="faq__item">
+      <button class="faq__q">how do your tees fit?</button>
+      <div class="faq__a"><div class="faq__a-inner">all our tees are oversized fit. if you usually wear M in regular fit, M in whÿclub will give you that perfect oversized drape. when in doubt, go with your usual size.</div></div>
+    </div>
+    <div class="faq__item">
+      <button class="faq__q">can i change my order after placing it?</button>
+      <div class="faq__a"><div class="faq__a-inner">if the order hasn't shipped yet, yes! drop us a message on whatsapp or email within 2 hours of ordering and we'll sort it out.</div></div>
+    </div>
+  </div>
+</div>
+
+<footer class="page-footer">
+  <div class="page-footer__copy">© 2026 whÿclub — perfect is boring</div>
+</footer>
+
+<script>
+  document.querySelectorAll('.faq__q').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.parentElement;
+      const wasOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq__item').forEach(i => i.classList.remove('open'));
+      if (!wasOpen) item.classList.add('open');
+    });
+  });
+
+  document.getElementById('contactForm').addEventListener('submit', e => {
+    e.preventDefault();
+    const btn = e.target.querySelector('.form-submit');
+    btn.textContent = '✓ message sent!';
+    btn.style.background = '#1a1a1a';
+    setTimeout(() => { btn.textContent = 'send message'; btn.style.background = ''; }, 2500);
+  });
+</script>
+</body>
+</html>

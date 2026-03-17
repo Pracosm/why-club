@@ -1,0 +1,1368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WhÿClub — Perfect is Boring</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+
+    /* ═══════════════════════════════════════════════
+       RESET
+    ═══════════════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #fff;
+      color: #111;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+    body.locked { overflow: hidden; }
+    a  { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
+    img { display: block; max-width: 100%; }
+    button { cursor: pointer; font-family: inherit; border: none; outline: none; background: none; }
+
+    :root {
+      --red:    #E00000;
+      --black:  #111111;
+      --white:  #ffffff;
+      --off:    #F6F6F4;
+      --border: #E0E0E0;
+      --mid:    #777777;
+      --light:  #BEBEBE;
+    }
+
+    /* ═══════════════════════════════════════════════
+       ENTRANCE  ── multi-stage  (~3 s)
+       1. Black screen
+       2. Logo stamps up from below — clip-path reveal (0.3s → 1.15s)
+       3. Red rule draws left → right under logo   (1.3s → 1.75s)
+       4. Tagline cross-fades in, no movement       (1.8s → 2.2s)
+       5. Premium stillness — everything breathes   (0.6s hold)
+       6. TV-off collapse (scaleY pinch → red line → gone)
+    ═══════════════════════════════════════════════ */
+    #entrance {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: #0a0a0a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      transform-origin: center center;
+    }
+    /* Radial vignette */
+    #entrance::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,0.7) 100%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* TV-off collapse */
+    #entrance.tvoff {
+      animation: tvOff 0.5s cubic-bezier(0.55, 0, 1, 0.45) forwards;
+    }
+    @keyframes tvOff {
+      0%   { transform: scaleY(1);      background: #0a0a0a; }
+      55%  { transform: scaleY(0.005);  background: var(--red); }
+      80%  { transform: scaleY(0.005);  background: var(--red); }
+      100% { transform: scaleY(0);      background: var(--red); opacity: 0; }
+    }
+
+    /* Inner content wrapper */
+    .ent-body {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+
+    /* ── Logo: stamp up from below via clip-path ──
+       Feels like screen-printing — the logo is
+       physically pressed onto the screen.           */
+    .ent-logo-wrap {
+      width: min(72vw, 520px);
+      clip-path: inset(0 0 100% 0);
+      animation: logoStamp 0.85s cubic-bezier(0.76, 0, 0.24, 1) 0.3s forwards;
+    }
+    .ent-logo-wrap svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    /* White paths on dark entrance bg */
+    .ent-logo-wrap svg path:not(.cls-1) { fill: #ffffff; }
+    .ent-logo-wrap svg path.cls-1       { fill: #0a0a0a; }
+
+    @keyframes logoStamp {
+      from { clip-path: inset(0 0 100% 0); }
+      to   { clip-path: inset(0 0 0%   0); }
+    }
+
+    /* ── Red rule: draws left → right after logo ── */
+    .ent-rule {
+      width: min(72vw, 520px);
+      height: 2px;
+      background: var(--red);
+      transform-origin: left center;
+      transform: scaleX(0);
+      animation: ruleDraw 0.45s cubic-bezier(0.76, 0, 0.24, 1) 1.3s forwards;
+      margin-top: 10px;
+    }
+    @keyframes ruleDraw {
+      from { transform: scaleX(0); }
+      to   { transform: scaleX(1); }
+    }
+
+    /* ── Tagline: pure cross-fade, zero movement ──
+       Stillness = luxury.                           */
+    .ent-tag {
+      font-size: clamp(9px, 1.1vw, 11px);
+      font-weight: 600;
+      letter-spacing: 0.34em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0);
+      margin-top: 18px;
+      animation: tagFade 0.5s ease 1.8s forwards;
+    }
+    @keyframes tagFade {
+      to { color: rgba(255,255,255,0.28); }
+    }
+
+
+    /* ═══════════════════════════════════════════════
+       ANNOUNCEMENT BAR
+    ═══════════════════════════════════════════════ */
+    .ann {
+      background: var(--black);
+      color: var(--white);
+      overflow: hidden;
+      white-space: nowrap;
+      padding: 9px 0;
+    }
+    .ann__track {
+      display: inline-flex;
+      animation: scroll 30s linear infinite;
+    }
+    .ann__item {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 40px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .ann__item::after { content: '·'; color: var(--red); font-size: 16px; line-height: 0; }
+    @keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+
+    /* ═══════════════════════════════════════════════
+       HEADER
+    ═══════════════════════════════════════════════ */
+    .hdr {
+      position: sticky;
+      top: 0;
+      z-index: 500;
+      background: rgba(255,255,255,0.97);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .hdr__inner {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0 40px;
+      height: 64px;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+    }
+    .hdr__nav-l { display: flex; gap: 28px; align-items: center; }
+    .hdr__nav-l a {
+      font-size: 12px; font-weight: 600;
+      letter-spacing: 0.06em; color: var(--mid);
+      text-transform: lowercase; transition: color .2s;
+    }
+    .hdr__nav-l a:hover { color: var(--black); }
+
+    /* Centre logo */
+    .hdr__logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .hdr__logo svg {
+      height: 32px;
+      width: auto;
+      display: block;
+    }
+    /* paths default to black on white bg; cls-1 white = counter-forms disappear into bg */
+    .hdr__logo svg path:not(.cls-1) { fill: var(--black); }
+    .hdr__logo svg path.cls-1       { fill: var(--white); }
+
+    .hdr__nav-r {
+      display: flex; gap: 20px;
+      align-items: center; justify-content: flex-end;
+    }
+    .hdr__nav-r a, .hdr__nav-r button {
+      font-size: 12px; font-weight: 600;
+      letter-spacing: 0.06em; color: var(--mid);
+      text-transform: lowercase; transition: color .2s;
+    }
+    .hdr__nav-r a:hover, .hdr__nav-r button:hover { color: var(--black); }
+    .cart-pill {
+      display: inline-flex; align-items: center; gap: 5px;
+    }
+    .cart-n {
+      width: 16px; height: 16px; border-radius: 50%;
+      background: var(--red); color: #fff;
+      font-size: 9px; font-weight: 800;
+      display: inline-flex; align-items: center; justify-content: center;
+    }
+    .burger {
+      display: none; flex-direction: column;
+      gap: 4px; padding: 4px;
+    }
+    .burger span { display: block; width: 20px; height: 1.5px; background: var(--black); border-radius: 2px; }
+
+
+    /* ═══════════════════════════════════════════════
+       HERO CAROUSEL — full-screen, clean
+    ═══════════════════════════════════════════════ */
+    .hero {
+      position: relative;
+      height: calc(100vh - 64px - 36px);
+      overflow: hidden;
+      border-bottom: 1px solid var(--border);
+      background: var(--off);
+      user-select: none;
+    }
+
+    /* Track holds all slides side by side */
+    .hero__track {
+      display: flex;
+      height: 100%;
+      transition: transform 0.72s cubic-bezier(0.76, 0, 0.24, 1);
+      will-change: transform;
+    }
+
+    /* Each slide fills 100% width */
+    .hero__slide {
+      flex: 0 0 100%;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+    .hero__slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transform: scale(1.06);
+      transition: transform 7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .hero__slide.is-active img { transform: scale(1); }
+
+    /* Prev / Next arrows — appear on hover */
+    .hero__arr {
+      position: absolute;
+      top: 50%; transform: translateY(-50%);
+      z-index: 10;
+      width: 44px; height: 44px; border-radius: 50%;
+      background: rgba(255,255,255,0.88);
+      border: 1px solid rgba(0,0,0,0.07);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 15px; color: var(--black);
+      backdrop-filter: blur(10px);
+      opacity: 0;
+      transition: opacity .3s, background .2s, transform .2s;
+    }
+    .hero:hover .hero__arr { opacity: 1; }
+    .hero__arr:hover { background: var(--white); transform: translateY(-50%) scale(1.06); }
+    .hero__arr--prev { left: 20px; }
+    .hero__arr--next { right: 20px; }
+
+    /* Dot indicators */
+    .hero__dots {
+      position: absolute;
+      bottom: 20px; left: 50%; transform: translateX(-50%);
+      display: flex; align-items: center; gap: 7px; z-index: 10;
+    }
+    .hero__dot {
+      width: 6px; height: 6px; border-radius: 9999px;
+      background: rgba(0,0,0,0.22);
+      cursor: pointer; border: none; padding: 0;
+      transition: width .35s cubic-bezier(0.76,0,0.24,1), background .35s;
+    }
+    .hero__dot.is-active { width: 22px; background: var(--black); }
+
+
+    /* ═══════════════════════════════════════════════
+       TICKER
+    ═══════════════════════════════════════════════ */
+    .ticker {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden; white-space: nowrap;
+      padding: 11px 0; background: var(--white);
+    }
+    .ticker__track {
+      display: inline-flex;
+      animation: scroll 24s linear infinite;
+    }
+    .ticker__item {
+      padding: 0 32px;
+      font-size: 11px; font-weight: 800;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--black);
+      display: inline-flex; align-items: center; gap: 10px;
+    }
+    .ticker__item .dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: var(--red); flex-shrink: 0;
+    }
+
+
+    /* ═══════════════════════════════════════════════
+       SECTION HEADER UTILITY
+    ═══════════════════════════════════════════════ */
+    .sec-hd {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 64px 40px 32px;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .sec-hd__t {
+      font-size: clamp(24px, 2.8vw, 36px);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      text-transform: lowercase;
+    }
+    .sec-hd__l {
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 0.1em; color: var(--mid);
+      border-bottom: 1px solid var(--light);
+      padding-bottom: 1px; white-space: nowrap;
+      text-transform: lowercase;
+      transition: color .2s, border-color .2s;
+    }
+    .sec-hd__l:hover { color: var(--black); border-color: var(--black); }
+
+
+    /* ═══════════════════════════════════════════════
+       PRODUCT GRID — Pinterest outline style
+       Real product images on white/off bg
+       Hover: image scales + quick-add slides up
+    ═══════════════════════════════════════════════ */
+    .products { background: var(--white); padding-bottom: 80px; }
+    .p-grid {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0 40px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid var(--border);
+      border-left: 1px solid var(--border);
+    }
+    .p-card {
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+      cursor: pointer;
+      background: var(--white);
+    }
+    .p-card__img {
+      position: relative;
+      background: var(--off);
+      overflow: hidden;
+      aspect-ratio: 1 / 1.1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .p-card__img img {
+      width: 88%;
+      height: 88%;
+      object-fit: contain;
+      display: block;
+      transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .p-card:hover .p-card__img img { transform: scale(1.06); }
+
+    /* Badges */
+    .badge {
+      position: absolute;
+      top: 14px; left: 14px;
+      font-size: 9px; font-weight: 800;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 4px 10px; border-radius: 9999px;
+      z-index: 2;
+    }
+    .badge-new  { background: var(--black); color: var(--white); }
+    .badge-sale { background: var(--red);   color: var(--white); }
+
+    /* Wishlist heart */
+    .p-wish {
+      position: absolute;
+      top: 12px; right: 12px;
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--white);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; color: var(--mid);
+      transition: background .2s, color .2s, border-color .2s;
+      z-index: 2;
+    }
+    .p-wish:hover { background: var(--black); color: var(--white); border-color: var(--black); }
+
+    /* Quick-add size bar slides up */
+    .p-qadd {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: rgba(255,255,255,0.97);
+      border-top: 1px solid var(--border);
+      padding: 10px 12px;
+      display: flex; gap: 5px;
+      transform: translateY(100%);
+      transition: transform 0.32s cubic-bezier(0.76, 0, 0.24, 1);
+      z-index: 3;
+    }
+    .p-card:hover .p-qadd { transform: translateY(0); }
+    .p-sz {
+      flex: 1;
+      padding: 7px 2px;
+      font-size: 9px; font-weight: 800;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      color: var(--black);
+      text-align: center;
+      transition: background .15s, border-color .15s, color .15s;
+    }
+    .p-sz:hover { background: var(--black); color: var(--white); border-color: var(--black); }
+    .p-sz.so  { opacity: 0.3; text-decoration: line-through; cursor: not-allowed; }
+    .p-sz.so:hover { background: transparent; color: var(--black); border-color: var(--border); }
+
+    /* Card info */
+    .p-info {
+      padding: 16px 18px 20px;
+      border-top: 1px solid var(--border);
+    }
+    .p-name {
+      font-size: 13px; font-weight: 600;
+      letter-spacing: -0.01em;
+      line-height: 1.35; margin-bottom: 8px;
+      text-transform: lowercase; color: var(--black);
+    }
+    .p-price-row { display: flex; align-items: center; gap: 8px; }
+    .p-price  { font-size: 14px; font-weight: 800; color: var(--black); }
+    .p-sale   { color: var(--red); }
+    .p-was    { font-size: 12px; font-weight: 400; color: var(--light); text-decoration: line-through; }
+
+    /* Colour dots */
+    .p-colours { display: flex; gap: 6px; margin-top: 10px; }
+    .p-col {
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border);
+      cursor: pointer;
+      transition: transform .2s;
+    }
+    .p-col:hover { transform: scale(1.25); }
+    .p-col.active { border-color: var(--black); }
+
+
+    /* ═══════════════════════════════════════════════
+       "PERFECT IS BORING" — black manifesto section
+    ═══════════════════════════════════════════════ */
+    .manifesto {
+      background: var(--black);
+      color: var(--white);
+      border-top: 1px solid #222;
+      overflow: hidden;
+    }
+    .manifesto__inner {
+      max-width: 1440px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 600px;
+    }
+    .manifesto__left {
+      padding: 80px 64px 80px 56px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-right: 1px solid #222;
+    }
+    .manifesto__eyebrow {
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 0.24em; text-transform: uppercase;
+      color: var(--red); margin-bottom: 20px;
+    }
+    .manifesto__bigline {
+      font-size: clamp(44px, 6vw, 90px);
+      font-weight: 900;
+      letter-spacing: -0.05em;
+      line-height: 0.9;
+      text-transform: lowercase;
+    }
+    .manifesto__bigline .acc { color: var(--red); }
+    .manifesto__body {
+      font-size: 15px; font-weight: 400;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.75; max-width: 420px;
+      margin-top: 32px; margin-bottom: 0;
+    }
+    .manifesto__bottom {
+      display: flex; gap: 16px;
+      flex-wrap: wrap; margin-top: 48px;
+    }
+    .btn-wht {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 13px 26px;
+      background: var(--white); color: var(--black);
+      font-size: 12px; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: lowercase;
+      border-radius: 9999px;
+      transition: background .2s, transform .15s;
+    }
+    .btn-wht:hover { background: #e8e8e8; transform: translateY(-1px); }
+    .btn-rd {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 13px 26px;
+      background: var(--red); color: var(--white);
+      font-size: 12px; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: lowercase;
+      border-radius: 9999px;
+      transition: background .2s, transform .15s;
+    }
+    .btn-rd:hover { background: #cc0000; transform: translateY(-1px); }
+    .manifesto__right {
+      display: grid;
+      grid-template-rows: 1fr 1fr;
+    }
+    .mani-img {
+      overflow: hidden;
+      position: relative;
+      border-bottom: 1px solid #222;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #181818;
+    }
+    .mani-img:last-child { border-bottom: none; }
+    .mani-img img {
+      width: 70%;
+      height: auto;
+      max-height: 280px;
+      object-fit: contain;
+      display: block;
+      transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+      filter: brightness(0.92);
+    }
+    .mani-img:hover img { transform: scale(1.05); filter: brightness(1); }
+    .mani-img__label {
+      position: absolute;
+      bottom: 16px; left: 20px;
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+    }
+    .mani-img__price {
+      position: absolute;
+      bottom: 16px; right: 20px;
+      font-size: 13px; font-weight: 800;
+      color: rgba(255,255,255,0.7);
+    }
+
+    /* Pull quote divider */
+    .pq {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 48px 56px;
+      background: var(--off);
+      overflow: hidden;
+    }
+    .pq__inner {
+      max-width: 1440px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 40px;
+    }
+    .pq__line {
+      width: 48px; height: 3px;
+      background: var(--red);
+      flex-shrink: 0;
+    }
+    .pq__text {
+      font-size: clamp(20px, 2.5vw, 30px);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      text-transform: lowercase;
+      color: var(--black);
+    }
+    .pq__text em { font-style: normal; color: var(--red); }
+
+
+    /* ═══════════════════════════════════════════════
+       REVIEWS
+    ═══════════════════════════════════════════════ */
+    .reviews {
+      padding: 80px 40px;
+      background: var(--white);
+      border-top: 1px solid var(--border);
+    }
+    .reviews__inner { max-width: 1440px; margin: 0 auto; }
+    .reviews__hd {
+      display: flex; align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 36px;
+    }
+    .reviews__title {
+      font-size: clamp(22px, 2.5vw, 32px);
+      font-weight: 900; letter-spacing: -0.04em;
+      text-transform: lowercase;
+    }
+    .reviews__meta {
+      font-size: 12px; color: var(--mid);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .stars { color: var(--red); letter-spacing: 2px; font-size: 13px; }
+    .r-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .r-cell {
+      padding: 28px 26px;
+      border-right: 1px solid var(--border);
+      background: var(--white);
+    }
+    .r-cell:last-child { border-right: none; }
+    .r-stars  { color: var(--red); font-size: 13px; letter-spacing: 2px; margin-bottom: 14px; }
+    .r-text   { font-size: 14px; color: #555; line-height: 1.7; font-style: italic; margin-bottom: 20px; }
+    .r-author { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: lowercase; }
+    .r-date   { font-size: 11px; color: var(--light); margin-top: 2px; }
+    .r-badge  {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 9px; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: #4CAF50; margin-top: 8px;
+    }
+    .r-badge::before { content: '✓'; }
+
+
+    /* ═══════════════════════════════════════════════
+       FEATURES STRIP
+    ═══════════════════════════════════════════════ */
+    .feats {
+      border-top: 1px solid var(--border);
+      background: var(--white);
+    }
+    .feats__inner {
+      max-width: 1440px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
+    .feat {
+      padding: 36px 32px;
+      border-right: 1px solid var(--border);
+      display: flex; align-items: center; gap: 16px;
+    }
+    .feat:last-child { border-right: none; }
+    .feat__ico { font-size: 22px; flex-shrink: 0; }
+    .feat__t { font-size: 13px; font-weight: 700; text-transform: lowercase; }
+    .feat__s { font-size: 11px; color: var(--mid); margin-top: 2px; }
+
+
+    /* ═══════════════════════════════════════════════
+       FOOTER
+    ═══════════════════════════════════════════════ */
+    .footer {
+      background: var(--black);
+      color: var(--white);
+      padding: 72px 40px 32px;
+    }
+    .footer__inner { max-width: 1440px; margin: 0 auto; }
+    .footer__top {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 60px;
+      padding-bottom: 56px;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    /* Footer logo — white version */
+    .footer__logo {
+      margin-bottom: 14px;
+    }
+    .footer__logo svg {
+      height: 28px;
+      width: auto;
+    }
+    .footer__logo svg path:not(.cls-1) { fill: #ffffff; }
+    .footer__logo svg path.cls-1       { fill: var(--black); }
+
+    .footer__desc {
+      font-size: 13px; color: rgba(255,255,255,0.38);
+      line-height: 1.7; max-width: 270px; margin-bottom: 24px;
+    }
+    .footer__socials { display: flex; gap: 8px; }
+    .f-soc {
+      width: 34px; height: 34px; border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.12);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700;
+      color: rgba(255,255,255,0.45);
+      transition: border-color .2s, color .2s;
+    }
+    .f-soc:hover { border-color: rgba(255,255,255,0.5); color: var(--white); }
+    .footer__col-h {
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: rgba(255,255,255,0.22);
+      margin-bottom: 20px;
+    }
+    .footer__links { display: flex; flex-direction: column; gap: 12px; }
+    .footer__links a {
+      font-size: 13px; color: rgba(255,255,255,0.48);
+      text-transform: lowercase;
+      transition: color .2s;
+    }
+    .footer__links a:hover { color: var(--white); }
+    .footer__btm {
+      display: flex; align-items: center;
+      justify-content: space-between;
+      padding-top: 28px; gap: 16px; flex-wrap: wrap;
+    }
+    .footer__copy { font-size: 11px; color: rgba(255,255,255,0.2); letter-spacing: 0.04em; }
+    .footer__pay  { display: flex; gap: 6px; flex-wrap: wrap; }
+    .pay {
+      font-size: 9px; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 3px; padding: 3px 8px;
+      color: rgba(255,255,255,0.28);
+    }
+
+
+    /* ═══════════════════════════════════════════════
+       MOBILE DRAWER
+    ═══════════════════════════════════════════════ */
+    .mob { display: none; position: fixed; inset: 0; z-index: 8000; }
+    .mob.open { display: block; }
+    .mob__bg { position: absolute; inset: 0; background: rgba(0,0,0,0.4); }
+    .mob__panel {
+      position: absolute; top: 0; left: 0; bottom: 0;
+      width: min(300px, 85vw);
+      background: var(--white);
+      padding: 24px;
+      display: flex; flex-direction: column; gap: 28px;
+      transform: translateX(-100%);
+      transition: transform .3s ease;
+    }
+    .mob.open .mob__panel { transform: translateX(0); }
+    .mob__x { align-self: flex-end; font-size: 18px; color: var(--mid); }
+    .mob__links { display: flex; flex-direction: column; gap: 2px; }
+    .mob__links a {
+      display: block; padding: 13px 0;
+      font-size: 18px; font-weight: 700;
+      border-bottom: 1px solid var(--border);
+      text-transform: lowercase; color: var(--black);
+    }
+
+
+    /* ═══════════════════════════════════════════════
+       RESPONSIVE
+    ═══════════════════════════════════════════════ */
+    @media (max-width: 1100px) {
+      .manifesto__inner { grid-template-columns: 1fr; }
+      .manifesto__right { grid-template-rows: unset; grid-template-columns: 1fr 1fr; }
+      .mani-img { border-bottom: none; border-right: 1px solid #222; aspect-ratio: 1/1; }
+      .mani-img:last-child { border-right: none; }
+      .footer__top { grid-template-columns: 1fr 1fr; gap: 40px; }
+    }
+    @media (max-width: 900px) {
+      .hdr__inner { padding: 0 20px; }
+      .hdr__nav-l { display: none; }
+      .burger { display: flex; }
+      .hero { height: 62vw; min-height: 320px; }
+      .p-grid { grid-template-columns: repeat(2, 1fr); }
+      .r-grid { grid-template-columns: 1fr; }
+      .r-cell { border-right: none; border-bottom: 1px solid var(--border); }
+      .r-cell:last-child { border-bottom: none; }
+      .feats__inner { grid-template-columns: repeat(2, 1fr); }
+      .feat:nth-child(2) { border-right: none; }
+      .feat:nth-child(3) { border-top: 1px solid var(--border); }
+      .feat:nth-child(4) { border-top: 1px solid var(--border); border-right: none; }
+      .pq { padding: 36px 28px; }
+    }
+    @media (max-width: 600px) {
+      .sec-hd, .p-grid { padding-left: 20px; padding-right: 20px; }
+      .reviews, .manifesto__left { padding: 48px 20px; }
+      .pq { padding: 32px 20px; }
+      .feats__inner { grid-template-columns: 1fr; }
+      .feat { border-right: none; border-top: 1px solid var(--border); }
+      .feat:first-child { border-top: none; }
+      .footer { padding: 48px 20px 24px; }
+      .footer__top { grid-template-columns: 1fr; }
+      .manifesto__right { grid-template-columns: 1fr; }
+      .mani-img { border-right: none; border-bottom: 1px solid #222; }
+    }
+    @media (max-width: 480px) {
+      .p-grid { grid-template-columns: 1fr; }
+    }
+
+  </style>
+</head>
+<body class="locked">
+
+<!-- ═══════════════════════════════════════════════
+     ENTRANCE
+═══════════════════════════════════════════════ -->
+<div id="entrance">
+  <div class="ent-body" id="entBody">
+    <!-- Inline SVG logo — white paths on dark bg -->
+    <div class="ent-logo-wrap">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="295 385 1345 270">
+        <defs><style>.cls-1{fill:#fff;}</style></defs>
+        <path d="M428.47,560q-12.25,29.92-24.53,59.85c-2.9,7.06-5.69,14.17-9,21a7.34,7.34,0,0,1-5.3,3.54c-19.62.26-39.24.14-58.87.22-2.93,0-4.43-.71-4.79-4q-9.75-88.85-19.69-177.67a54.23,54.23,0,0,1,0-5.46h67q1.95,43.23,3.9,86.58l1,.25c.58-1.12,1.25-2.2,1.72-3.36,10.73-26.56,21.41-53.16,32.27-79.67.72-1.75,2.88-4.12,4.4-4.14,18.33-.29,36.67-.19,55.67-.19,3.74,29.8,7.42,59.07,11.09,88.34l1.36.11c1.73-5.42,3.4-10.85,5.21-16.23,7.45-22.29,15-44.54,22.33-66.88,1.29-3.94,3-5.46,7.39-5.39,19.41.28,38.83.14,58.25.18,1.17,0,2.34.25,4.4.48-4.4,11.42-8.56,22.36-12.84,33.25q-29.39,74.84-59,149.58c-.73,1.83-3.62,3.94-5.54,4-19.41.33-38.83.15-58.24.4-4.32,0-5.51-1.61-6-5.59-3.53-26.33-7.3-52.63-11-78.94Z"/>
+        <path d="M615.72,644.24H553.85c1.82-10.62,3.56-20.71,5.28-30.79Q572.08,537.86,585,462.27c.45-2.65.29-5.38,4.31-5.36,19.17.09,38.34,0,58.42,0-3.48,21.24-6.87,41.86-10.45,63.69H646c12,0,24-.13,35.93.11,4.08.09,5.67-1,6.32-5.3,3-19.32,6.38-38.58,9.67-58.09h62.42c-1.53,9-3,17.49-4.4,25.95-8.62,51.64-17.32,103.28-25.74,155-.78,4.81-2.23,6.54-7.25,6.46-17.14-.27-34.28-.05-51.42-.05a46.42,46.42,0,0,1-4.76-.53c3.69-22.23,7.32-44.11,11.15-67.16h-8.73c-11.36,0-22.74.51-34.06-.09-6.54-.34-8.3,2.24-9.16,8.09-2.75,18.55-6,37-9.11,55.52A31,31,0,0,1,615.72,644.24Z"/>
+        <path d="M854.66,504.84c9.7-13,19.37-25.11,27.91-37.92,5.13-7.69,10.85-10.54,20.21-10.23,23.94.78,47.92.28,71.88.3h7.92c-7.23,7.71-13.39,14.43-19.7,21-27.58,28.72-55.29,57.31-82.69,86.2-2.79,2.95-4.26,7.47-5.51,11.51-3.88,12.61-7.19,25.39-11.13,38-1,3.12-2.9,6.59-5.44,8.48-27.33,20.3-54.87,40.33-82.38,60.4-1.27.93-2.75,1.57-5.79,3.26,2.41-8.3,4.22-15.1,6.36-21.8,10.26-32.21,20.67-64.38,30.81-96.62a11.68,11.68,0,0,0-.53-7.53c-14.26-32.46-28.71-64.84-43.1-97.25-.65-1.47-1.09-3-1.8-5a26.93,26.93,0,0,1,3.75-.56c22.31-.07,44.62,0,66.93-.25,4.28,0,6.19,1.36,7.47,5.36,4,12.56,8.43,25,12.72,37.49C853.05,501.1,853.72,502.53,854.66,504.84Z"/>
+        <path d="M873.8,418.27c-.11,13.3-10.18,23.48-23,23.25-12.34-.23-22.61-11.2-22.53-24.08.07-12.67,10.79-23.35,23.3-23.2C864.23,394.39,873.9,404.85,873.8,418.27Z"/>
+        <path d="M798.76,441.32c-12.91.12-22.7-9.87-22.82-23.28s9.76-23.89,22.3-23.86c12.71,0,23.19,10.89,23.13,24C821.32,430.69,811,441.2,798.76,441.32Z"/>
+        <path d="M1122.25,516c-14.59-3.5-28-7.74-41.84-9.78-19-2.8-36.54,1.13-48.37,18a59,59,0,0,0-10.2,45.31c2.9,16.29,16.18,26.84,34.19,26,13.08-.65,26-3.85,39-6.09,5-.87,9.92-2.22,16.07-3.63-1.79,11-3.39,20.9-5,30.77-.47,2.85-1.59,5.71-1.46,8.52.41,8.71-4.69,11.94-12.05,14.5-26.21,9.13-52.76,11.78-79.78,4.73-35.75-9.34-56.77-34.29-59.05-71.2-2.1-34,7.23-64.61,31.68-89.33,17-17.24,38.5-25.85,62.22-29.18,27.25-3.82,53.49-.89,78.37,11.65,4.09,2.06,5,4.47,4.13,8.76C1127.34,488.63,1124.85,502.38,1122.25,516Z"/>
+        <path d="M1182.91,593.54h75.22c-2.69,14.06-5.15,27.33-7.79,40.56-2.12,10.59-2.22,10.51-13.22,10.51q-58.87,0-117.76.11H1112c2.53-14.29,4.94-27.63,7.25-41,7.92-45.94,15.73-91.89,23.74-137.8,1.85-10.61-.09-8.89,10.52-9,17.52-.12,35,0,53.26,0C1198.85,502.36,1191,547.35,1182.91,593.54Z"/>
+        <path d="M1448.49,456.91c-2.46,14.27-4.68,27.44-7,40.61-4.78,27.21-8.91,54.56-14.59,81.59-8.77,41.68-35.8,65.17-78.32,68.31a146.17,146.17,0,0,1-37-1.84c-36.73-6.8-55.27-32.24-51.29-69.48,1.49-13.93,4.27-27.72,6.64-41.53,4.16-24.19,8.49-48.34,12.64-72.52.54-3.18,1.2-5.28,5.21-5.24,18,.17,35.94.06,53.91.08a28.29,28.29,0,0,1,3.59.5c-2.74,16.09-5.43,31.86-8.1,47.63q-5.52,32.64-11,65.27c-.1.61-.2,1.22-.27,1.83-1.35,12,2,19.29,10.1,22.15,10.53,3.71,23.41.19,28-9.51,4-8.4,6.45-17.8,8.15-27,5.93-32.24,11.19-64.6,16.93-96.88.27-1.51,2.64-3.77,4.06-3.78C1409.19,456.82,1428.16,456.91,1448.49,456.91Z"/>
+        <path d="M1587.05,548.08c34,20.11,19.4,69.89-5.77,84a95.13,95.13,0,0,1-46.17,12.27c-34.69.37-69.38.11-104.07.08a23,23,0,0,1-3.17-.53c10.74-62.24,21.44-124.28,32.26-187h7.72c28.08,0,56.17,0,84.25-.08,12.33-.05,24.38,1.67,35.67,6.61,26.3,11.5,34.53,46.67,16,69.07C1599.06,538.24,1592.82,542.78,1587.05,548.08Z"/>
+        <path d="M1489.24,604.39c2.14-12.82,4.09-25.16,6.41-37.43.24-1.29,2.69-3,4.15-3.06,10.31-.21,20.64-.39,30.93.14,11.07.57,17.45,6.32,18.51,15.54,1.19,10.42-4.28,19.35-14.1,22.67a30.74,30.74,0,0,1-9,2C1514,604.53,1501.88,604.39,1489.24,604.39Z"/>
+        <path d="M1501.08,533.69c2.06-11.48,3.89-22.44,6.14-33.32.32-1.58,2.61-3.9,4-3.94,9.47-.25,19-.5,28.43.29s14.44,5.44,15.7,12.42a19.87,19.87,0,0,1-9.84,21c-3,1.63-6.51,3.28-9.84,3.4C1524.44,534,1513.15,533.69,1501.08,533.69Z"/>
+        <path class="cls-1" d="M1497.48,598.22c1.79-10,3.3-18.43,4.82-26.94,10.7,0,21.14-.6,31.44.37,3,.28,7.73,5,7.84,7.8.18,4.58-2.43,9.46-4.63,13.83-.82,1.63-3.75,2.91-5.81,3.07C1520.17,597.18,1509.18,597.61,1497.48,598.22Z"/>
+        <path class="cls-1" d="M1509.52,527.27c1.33-7.5,2.29-14,3.78-20.4a5.5,5.5,0,0,1,4-3.3c7-.2,14,0,21,.36,4.49.25,8.94,1.66,9.86,6.79,1,5.59-1.22,10.76-6.37,12.88s-11,2.9-16.66,3.55C1520.26,527.71,1515.3,527.27,1509.52,527.27Z"/>
+      </svg>
+    </div>
+    <div class="ent-rule"></div>
+    <div class="ent-tag">perfect is boring</div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     ANNOUNCEMENT BAR
+═══════════════════════════════════════════════ -->
+<div class="ann">
+  <div class="ann__track">
+    <span class="ann__item">free shipping on all prepaid orders</span>
+    <span class="ann__item">perfect is boring</span>
+    <span class="ann__item">new drop available now</span>
+    <span class="ann__item">cash on delivery available</span>
+    <span class="ann__item">100% cotton · oversized fit</span>
+    <span class="ann__item">free shipping on all prepaid orders</span>
+    <span class="ann__item">perfect is boring</span>
+    <span class="ann__item">new drop available now</span>
+    <span class="ann__item">cash on delivery available</span>
+    <span class="ann__item">100% cotton · oversized fit</span>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     HEADER
+═══════════════════════════════════════════════ -->
+<header class="hdr">
+  <div class="hdr__inner">
+    <!-- Left nav -->
+    <nav><ul class="hdr__nav-l">
+      <li><a href="#">shop</a></li>
+      <li><a href="#">collections</a></li>
+      <li><a href="#">about</a></li>
+    </ul></nav>
+
+    <!-- Centre logo -->
+    <a class="hdr__logo" href="#">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="295 385 1345 270">
+        <defs><style>.cls-1{fill:#fff;}</style></defs>
+        <path d="M428.47,560q-12.25,29.92-24.53,59.85c-2.9,7.06-5.69,14.17-9,21a7.34,7.34,0,0,1-5.3,3.54c-19.62.26-39.24.14-58.87.22-2.93,0-4.43-.71-4.79-4q-9.75-88.85-19.69-177.67a54.23,54.23,0,0,1,0-5.46h67q1.95,43.23,3.9,86.58l1,.25c.58-1.12,1.25-2.2,1.72-3.36,10.73-26.56,21.41-53.16,32.27-79.67.72-1.75,2.88-4.12,4.4-4.14,18.33-.29,36.67-.19,55.67-.19,3.74,29.8,7.42,59.07,11.09,88.34l1.36.11c1.73-5.42,3.4-10.85,5.21-16.23,7.45-22.29,15-44.54,22.33-66.88,1.29-3.94,3-5.46,7.39-5.39,19.41.28,38.83.14,58.25.18,1.17,0,2.34.25,4.4.48-4.4,11.42-8.56,22.36-12.84,33.25q-29.39,74.84-59,149.58c-.73,1.83-3.62,3.94-5.54,4-19.41.33-38.83.15-58.24.4-4.32,0-5.51-1.61-6-5.59-3.53-26.33-7.3-52.63-11-78.94Z"/>
+        <path d="M615.72,644.24H553.85c1.82-10.62,3.56-20.71,5.28-30.79Q572.08,537.86,585,462.27c.45-2.65.29-5.38,4.31-5.36,19.17.09,38.34,0,58.42,0-3.48,21.24-6.87,41.86-10.45,63.69H646c12,0,24-.13,35.93.11,4.08.09,5.67-1,6.32-5.3,3-19.32,6.38-38.58,9.67-58.09h62.42c-1.53,9-3,17.49-4.4,25.95-8.62,51.64-17.32,103.28-25.74,155-.78,4.81-2.23,6.54-7.25,6.46-17.14-.27-34.28-.05-51.42-.05a46.42,46.42,0,0,1-4.76-.53c3.69-22.23,7.32-44.11,11.15-67.16h-8.73c-11.36,0-22.74.51-34.06-.09-6.54-.34-8.3,2.24-9.16,8.09-2.75,18.55-6,37-9.11,55.52A31,31,0,0,1,615.72,644.24Z"/>
+        <path d="M854.66,504.84c9.7-13,19.37-25.11,27.91-37.92,5.13-7.69,10.85-10.54,20.21-10.23,23.94.78,47.92.28,71.88.3h7.92c-7.23,7.71-13.39,14.43-19.7,21-27.58,28.72-55.29,57.31-82.69,86.2-2.79,2.95-4.26,7.47-5.51,11.51-3.88,12.61-7.19,25.39-11.13,38-1,3.12-2.9,6.59-5.44,8.48-27.33,20.3-54.87,40.33-82.38,60.4-1.27.93-2.75,1.57-5.79,3.26,2.41-8.3,4.22-15.1,6.36-21.8,10.26-32.21,20.67-64.38,30.81-96.62a11.68,11.68,0,0,0-.53-7.53c-14.26-32.46-28.71-64.84-43.1-97.25-.65-1.47-1.09-3-1.8-5a26.93,26.93,0,0,1,3.75-.56c22.31-.07,44.62,0,66.93-.25,4.28,0,6.19,1.36,7.47,5.36,4,12.56,8.43,25,12.72,37.49C853.05,501.1,853.72,502.53,854.66,504.84Z"/>
+        <path d="M873.8,418.27c-.11,13.3-10.18,23.48-23,23.25-12.34-.23-22.61-11.2-22.53-24.08.07-12.67,10.79-23.35,23.3-23.2C864.23,394.39,873.9,404.85,873.8,418.27Z"/>
+        <path d="M798.76,441.32c-12.91.12-22.7-9.87-22.82-23.28s9.76-23.89,22.3-23.86c12.71,0,23.19,10.89,23.13,24C821.32,430.69,811,441.2,798.76,441.32Z"/>
+        <path d="M1122.25,516c-14.59-3.5-28-7.74-41.84-9.78-19-2.8-36.54,1.13-48.37,18a59,59,0,0,0-10.2,45.31c2.9,16.29,16.18,26.84,34.19,26,13.08-.65,26-3.85,39-6.09,5-.87,9.92-2.22,16.07-3.63-1.79,11-3.39,20.9-5,30.77-.47,2.85-1.59,5.71-1.46,8.52.41,8.71-4.69,11.94-12.05,14.5-26.21,9.13-52.76,11.78-79.78,4.73-35.75-9.34-56.77-34.29-59.05-71.2-2.1-34,7.23-64.61,31.68-89.33,17-17.24,38.5-25.85,62.22-29.18,27.25-3.82,53.49-.89,78.37,11.65,4.09,2.06,5,4.47,4.13,8.76C1127.34,488.63,1124.85,502.38,1122.25,516Z"/>
+        <path d="M1182.91,593.54h75.22c-2.69,14.06-5.15,27.33-7.79,40.56-2.12,10.59-2.22,10.51-13.22,10.51q-58.87,0-117.76.11H1112c2.53-14.29,4.94-27.63,7.25-41,7.92-45.94,15.73-91.89,23.74-137.8,1.85-10.61-.09-8.89,10.52-9,17.52-.12,35,0,53.26,0C1198.85,502.36,1191,547.35,1182.91,593.54Z"/>
+        <path d="M1448.49,456.91c-2.46,14.27-4.68,27.44-7,40.61-4.78,27.21-8.91,54.56-14.59,81.59-8.77,41.68-35.8,65.17-78.32,68.31a146.17,146.17,0,0,1-37-1.84c-36.73-6.8-55.27-32.24-51.29-69.48,1.49-13.93,4.27-27.72,6.64-41.53,4.16-24.19,8.49-48.34,12.64-72.52.54-3.18,1.2-5.28,5.21-5.24,18,.17,35.94.06,53.91.08a28.29,28.29,0,0,1,3.59.5c-2.74,16.09-5.43,31.86-8.1,47.63q-5.52,32.64-11,65.27c-.1.61-.2,1.22-.27,1.83-1.35,12,2,19.29,10.1,22.15,10.53,3.71,23.41.19,28-9.51,4-8.4,6.45-17.8,8.15-27,5.93-32.24,11.19-64.6,16.93-96.88.27-1.51,2.64-3.77,4.06-3.78C1409.19,456.82,1428.16,456.91,1448.49,456.91Z"/>
+        <path d="M1587.05,548.08c34,20.11,19.4,69.89-5.77,84a95.13,95.13,0,0,1-46.17,12.27c-34.69.37-69.38.11-104.07.08a23,23,0,0,1-3.17-.53c10.74-62.24,21.44-124.28,32.26-187h7.72c28.08,0,56.17,0,84.25-.08,12.33-.05,24.38,1.67,35.67,6.61,26.3,11.5,34.53,46.67,16,69.07C1599.06,538.24,1592.82,542.78,1587.05,548.08Z"/>
+        <path d="M1489.24,604.39c2.14-12.82,4.09-25.16,6.41-37.43.24-1.29,2.69-3,4.15-3.06,10.31-.21,20.64-.39,30.93.14,11.07.57,17.45,6.32,18.51,15.54,1.19,10.42-4.28,19.35-14.1,22.67a30.74,30.74,0,0,1-9,2C1514,604.53,1501.88,604.39,1489.24,604.39Z"/>
+        <path d="M1501.08,533.69c2.06-11.48,3.89-22.44,6.14-33.32.32-1.58,2.61-3.9,4-3.94,9.47-.25,19-.5,28.43.29s14.44,5.44,15.7,12.42a19.87,19.87,0,0,1-9.84,21c-3,1.63-6.51,3.28-9.84,3.4C1524.44,534,1513.15,533.69,1501.08,533.69Z"/>
+        <path class="cls-1" d="M1497.48,598.22c1.79-10,3.3-18.43,4.82-26.94,10.7,0,21.14-.6,31.44.37,3,.28,7.73,5,7.84,7.8.18,4.58-2.43,9.46-4.63,13.83-.82,1.63-3.75,2.91-5.81,3.07C1520.17,597.18,1509.18,597.61,1497.48,598.22Z"/>
+        <path class="cls-1" d="M1509.52,527.27c1.33-7.5,2.29-14,3.78-20.4a5.5,5.5,0,0,1,4-3.3c7-.2,14,0,21,.36,4.49.25,8.94,1.66,9.86,6.79,1,5.59-1.22,10.76-6.37,12.88s-11,2.9-16.66,3.55C1520.26,527.71,1515.3,527.27,1509.52,527.27Z"/>
+      </svg>
+    </a>
+
+    <!-- Right -->
+    <div class="hdr__nav-r">
+      <button>search</button>
+      <a href="#">account</a>
+      <a href="#" class="cart-pill">cart <span class="cart-n">0</span></a>
+      <button class="burger" id="burgerBtn"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+
+<!-- Mobile drawer -->
+<div class="mob" id="mobNav">
+  <div class="mob__bg" id="mobBg"></div>
+  <div class="mob__panel">
+    <button class="mob__x" id="mobX">✕</button>
+    <ul class="mob__links">
+      <li><a href="#">shop all</a></li>
+      <li><a href="#">collections</a></li>
+      <li><a href="#">about</a></li>
+      <li><a href="#">contact</a></li>
+    </ul>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     HERO CAROUSEL
+═══════════════════════════════════════════════ -->
+<section class="hero" id="heroCarousel">
+  <div class="hero__track" id="heroTrack">
+    <div class="hero__slide is-active">
+      <img src="tee-midnight.jpg" alt="midnight in mumbai" draggable="false" />
+    </div>
+    <div class="hero__slide">
+      <img src="tee-badtouch.jpg" alt="bad touch" draggable="false" />
+    </div>
+    <div class="hero__slide">
+      <img src="tee-star.jpg" alt="please i'm a star" draggable="false" />
+    </div>
+  </div>
+
+  <button class="hero__arr hero__arr--prev" id="heroPrev" aria-label="Previous">←</button>
+  <button class="hero__arr hero__arr--next" id="heroNext" aria-label="Next">→</button>
+
+  <div class="hero__dots" id="heroDots">
+    <button class="hero__dot is-active" data-i="0" aria-label="Slide 1"></button>
+    <button class="hero__dot" data-i="1" aria-label="Slide 2"></button>
+    <button class="hero__dot" data-i="2" aria-label="Slide 3"></button>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════
+     TICKER
+═══════════════════════════════════════════════ -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker__track">
+    <span class="ticker__item"><span class="dot"></span>new in</span>
+    <span class="ticker__item"><span class="dot"></span>midnight in mumbai</span>
+    <span class="ticker__item"><span class="dot"></span>bad touch</span>
+    <span class="ticker__item"><span class="dot"></span>please i'm a star</span>
+    <span class="ticker__item"><span class="dot"></span>perfect is boring</span>
+    <span class="ticker__item"><span class="dot"></span>oversized · 100% cotton</span>
+    <span class="ticker__item"><span class="dot"></span>new in</span>
+    <span class="ticker__item"><span class="dot"></span>midnight in mumbai</span>
+    <span class="ticker__item"><span class="dot"></span>bad touch</span>
+    <span class="ticker__item"><span class="dot"></span>please i'm a star</span>
+    <span class="ticker__item"><span class="dot"></span>perfect is boring</span>
+    <span class="ticker__item"><span class="dot"></span>oversized · 100% cotton</span>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     PRODUCTS
+═══════════════════════════════════════════════ -->
+<section class="products" id="products">
+  <div class="sec-hd">
+    <h2 class="sec-hd__t">shop all</h2>
+    <a href="#" class="sec-hd__l">view all →</a>
+  </div>
+
+  <div class="p-grid">
+
+    <!-- Midnight in Mumbai -->
+    <article class="p-card">
+      <div class="p-card__img">
+        <img src="tee-midnight.jpg" alt="midnight in mumbai tee" loading="lazy" />
+        <span class="badge badge-new">new</span>
+        <button class="p-wish" aria-label="Wishlist">♡</button>
+        <div class="p-qadd">
+          <button class="p-sz">xs</button>
+          <button class="p-sz">s</button>
+          <button class="p-sz">m</button>
+          <button class="p-sz">l</button>
+          <button class="p-sz">xl</button>
+          <button class="p-sz">xxl</button>
+        </div>
+      </div>
+      <div class="p-info">
+        <div class="p-name">midnight in mumbai</div>
+        <div class="p-price-row">
+          <span class="p-price">₹1,999</span>
+        </div>
+        <div class="p-colours">
+          <div class="p-col active" style="background:#111" title="Black"></div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Bad Touch -->
+    <article class="p-card">
+      <div class="p-card__img">
+        <img src="tee-badtouch.jpg" alt="bad touch tee" loading="lazy" />
+        <span class="badge badge-new">new</span>
+        <button class="p-wish" aria-label="Wishlist">♡</button>
+        <div class="p-qadd">
+          <button class="p-sz">xs</button>
+          <button class="p-sz">s</button>
+          <button class="p-sz">m</button>
+          <button class="p-sz">l</button>
+          <button class="p-sz">xl</button>
+          <button class="p-sz so">xxl</button>
+        </div>
+      </div>
+      <div class="p-info">
+        <div class="p-name">bad touch</div>
+        <div class="p-price-row">
+          <span class="p-price">₹1,799</span>
+        </div>
+        <div class="p-colours">
+          <div class="p-col active" style="background:#fff;border-color:#bbb" title="White"></div>
+        </div>
+      </div>
+    </article>
+
+    <!-- Please I'm a Star -->
+    <article class="p-card">
+      <div class="p-card__img">
+        <img src="tee-star.jpg" alt="please i'm a star tee" loading="lazy" />
+        <span class="badge badge-sale">sale</span>
+        <button class="p-wish" aria-label="Wishlist">♡</button>
+        <div class="p-qadd">
+          <button class="p-sz">xs</button>
+          <button class="p-sz">s</button>
+          <button class="p-sz">m</button>
+          <button class="p-sz">l</button>
+          <button class="p-sz so">xl</button>
+          <button class="p-sz so">xxl</button>
+        </div>
+      </div>
+      <div class="p-info">
+        <div class="p-name">please i'm a star</div>
+        <div class="p-price-row">
+          <span class="p-price p-sale">₹1,699</span>
+          <span class="p-was">₹1,999</span>
+        </div>
+        <div class="p-colours">
+          <div class="p-col active" style="background:#F5E87A;border-color:#ccc" title="Yellow"></div>
+        </div>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════
+     PULL QUOTE
+═══════════════════════════════════════════════ -->
+<div class="pq">
+  <div class="pq__inner">
+    <div class="pq__line"></div>
+    <div class="pq__text">
+      "every piece starts with a feeling — <em>not a brief.</em>"
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     MANIFESTO — black section
+═══════════════════════════════════════════════ -->
+<section class="manifesto" id="manifesto">
+  <div class="manifesto__inner">
+
+    <!-- Left copy -->
+    <div class="manifesto__left">
+      <div>
+        <div class="manifesto__eyebrow">about whÿclub</div>
+        <div class="manifesto__bigline">
+          perfect<br>is<br><span class="acc">boring.</span>
+        </div>
+        <p class="manifesto__body">
+          we make clothes for people who are done being safe. every graphic is a feeling, every drop is a statement. we don't follow trends — we wear what we mean.
+        </p>
+        <p class="manifesto__body" style="margin-top:16px;">
+          built in india. worn everywhere. oversized fits, bold prints, 100% cotton. the club is open.
+        </p>
+      </div>
+      <div class="manifesto__bottom">
+        <a href="#products" class="btn-wht">shop the drop →</a>
+        <a href="#" class="btn-rd">join the club</a>
+      </div>
+    </div>
+
+    <!-- Right — 2 product images stacked -->
+    <div class="manifesto__right">
+      <div class="mani-img">
+        <img src="tee-star.jpg" alt="please i'm a star" loading="lazy" />
+        <div class="mani-img__label">please i'm a star</div>
+        <div class="mani-img__price">₹1,699</div>
+      </div>
+      <div class="mani-img">
+        <img src="tee-badtouch.jpg" alt="bad touch" loading="lazy" />
+        <div class="mani-img__label">bad touch</div>
+        <div class="mani-img__price">₹1,799</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════
+     REVIEWS
+═══════════════════════════════════════════════ -->
+<section class="reviews">
+  <div class="reviews__inner">
+    <div class="reviews__hd">
+      <h2 class="reviews__title">what they're saying</h2>
+      <div class="reviews__meta">
+        <span class="stars">★★★★★</span> 4.9 · 100+ reviews
+      </div>
+    </div>
+    <div class="r-grid">
+      <div class="r-cell">
+        <div class="r-stars">★★★★★</div>
+        <p class="r-text">"midnight in mumbai is genuinely one of the best tees i've ever owned. the print is insane, the fabric is heavy and it fits perfectly oversized."</p>
+        <div class="r-author">aryan s.</div>
+        <div class="r-date">mumbai · feb 2025</div>
+        <div class="r-badge">verified purchase</div>
+      </div>
+      <div class="r-cell">
+        <div class="r-stars">★★★★★</div>
+        <p class="r-text">"bad touch arrived and i wore it the same day. the thermal hand graphic is so different from anything else out there. obsessed."</p>
+        <div class="r-author">priya k.</div>
+        <div class="r-date">bangalore · jan 2025</div>
+        <div class="r-badge">verified purchase</div>
+      </div>
+      <div class="r-cell">
+        <div class="r-stars">★★★★★</div>
+        <p class="r-text">"got the yellow star tee as a gift and honestly it slaps. 'perfect is boring' is not just a slogan — it's in the fabric."</p>
+        <div class="r-author">kabir m.</div>
+        <div class="r-date">delhi · mar 2025</div>
+        <div class="r-badge">verified purchase</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════
+     FEATURES
+═══════════════════════════════════════════════ -->
+<div class="feats">
+  <div class="feats__inner">
+    <div class="feat"><span class="feat__ico">🚚</span><div><div class="feat__t">free shipping</div><div class="feat__s">on all prepaid orders</div></div></div>
+    <div class="feat"><span class="feat__ico">💵</span><div><div class="feat__t">cash on delivery</div><div class="feat__s">available pan-india</div></div></div>
+    <div class="feat"><span class="feat__ico">↩</span><div><div class="feat__t">easy returns</div><div class="feat__s">7-day return window</div></div></div>
+    <div class="feat"><span class="feat__ico">🔒</span><div><div class="feat__t">secure checkout</div><div class="feat__s">upi · cards · cod</div></div></div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════════ -->
+<footer class="footer">
+  <div class="footer__inner">
+    <div class="footer__top">
+
+      <div>
+        <div class="footer__logo">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="295 385 1345 270">
+            <defs><style>.cls-1{fill:#fff;}</style></defs>
+            <path d="M428.47,560q-12.25,29.92-24.53,59.85c-2.9,7.06-5.69,14.17-9,21a7.34,7.34,0,0,1-5.3,3.54c-19.62.26-39.24.14-58.87.22-2.93,0-4.43-.71-4.79-4q-9.75-88.85-19.69-177.67a54.23,54.23,0,0,1,0-5.46h67q1.95,43.23,3.9,86.58l1,.25c.58-1.12,1.25-2.2,1.72-3.36,10.73-26.56,21.41-53.16,32.27-79.67.72-1.75,2.88-4.12,4.4-4.14,18.33-.29,36.67-.19,55.67-.19,3.74,29.8,7.42,59.07,11.09,88.34l1.36.11c1.73-5.42,3.4-10.85,5.21-16.23,7.45-22.29,15-44.54,22.33-66.88,1.29-3.94,3-5.46,7.39-5.39,19.41.28,38.83.14,58.25.18,1.17,0,2.34.25,4.4.48-4.4,11.42-8.56,22.36-12.84,33.25q-29.39,74.84-59,149.58c-.73,1.83-3.62,3.94-5.54,4-19.41.33-38.83.15-58.24.4-4.32,0-5.51-1.61-6-5.59-3.53-26.33-7.3-52.63-11-78.94Z"/>
+            <path d="M615.72,644.24H553.85c1.82-10.62,3.56-20.71,5.28-30.79Q572.08,537.86,585,462.27c.45-2.65.29-5.38,4.31-5.36,19.17.09,38.34,0,58.42,0-3.48,21.24-6.87,41.86-10.45,63.69H646c12,0,24-.13,35.93.11,4.08.09,5.67-1,6.32-5.3,3-19.32,6.38-38.58,9.67-58.09h62.42c-1.53,9-3,17.49-4.4,25.95-8.62,51.64-17.32,103.28-25.74,155-.78,4.81-2.23,6.54-7.25,6.46-17.14-.27-34.28-.05-51.42-.05a46.42,46.42,0,0,1-4.76-.53c3.69-22.23,7.32-44.11,11.15-67.16h-8.73c-11.36,0-22.74.51-34.06-.09-6.54-.34-8.3,2.24-9.16,8.09-2.75,18.55-6,37-9.11,55.52A31,31,0,0,1,615.72,644.24Z"/>
+            <path d="M854.66,504.84c9.7-13,19.37-25.11,27.91-37.92,5.13-7.69,10.85-10.54,20.21-10.23,23.94.78,47.92.28,71.88.3h7.92c-7.23,7.71-13.39,14.43-19.7,21-27.58,28.72-55.29,57.31-82.69,86.2-2.79,2.95-4.26,7.47-5.51,11.51-3.88,12.61-7.19,25.39-11.13,38-1,3.12-2.9,6.59-5.44,8.48-27.33,20.3-54.87,40.33-82.38,60.4-1.27.93-2.75,1.57-5.79,3.26,2.41-8.3,4.22-15.1,6.36-21.8,10.26-32.21,20.67-64.38,30.81-96.62a11.68,11.68,0,0,0-.53-7.53c-14.26-32.46-28.71-64.84-43.1-97.25-.65-1.47-1.09-3-1.8-5a26.93,26.93,0,0,1,3.75-.56c22.31-.07,44.62,0,66.93-.25,4.28,0,6.19,1.36,7.47,5.36,4,12.56,8.43,25,12.72,37.49C853.05,501.1,853.72,502.53,854.66,504.84Z"/>
+            <path d="M873.8,418.27c-.11,13.3-10.18,23.48-23,23.25-12.34-.23-22.61-11.2-22.53-24.08.07-12.67,10.79-23.35,23.3-23.2C864.23,394.39,873.9,404.85,873.8,418.27Z"/>
+            <path d="M798.76,441.32c-12.91.12-22.7-9.87-22.82-23.28s9.76-23.89,22.3-23.86c12.71,0,23.19,10.89,23.13,24C821.32,430.69,811,441.2,798.76,441.32Z"/>
+            <path d="M1122.25,516c-14.59-3.5-28-7.74-41.84-9.78-19-2.8-36.54,1.13-48.37,18a59,59,0,0,0-10.2,45.31c2.9,16.29,16.18,26.84,34.19,26,13.08-.65,26-3.85,39-6.09,5-.87,9.92-2.22,16.07-3.63-1.79,11-3.39,20.9-5,30.77-.47,2.85-1.59,5.71-1.46,8.52.41,8.71-4.69,11.94-12.05,14.5-26.21,9.13-52.76,11.78-79.78,4.73-35.75-9.34-56.77-34.29-59.05-71.2-2.1-34,7.23-64.61,31.68-89.33,17-17.24,38.5-25.85,62.22-29.18,27.25-3.82,53.49-.89,78.37,11.65,4.09,2.06,5,4.47,4.13,8.76C1127.34,488.63,1124.85,502.38,1122.25,516Z"/>
+            <path d="M1182.91,593.54h75.22c-2.69,14.06-5.15,27.33-7.79,40.56-2.12,10.59-2.22,10.51-13.22,10.51q-58.87,0-117.76.11H1112c2.53-14.29,4.94-27.63,7.25-41,7.92-45.94,15.73-91.89,23.74-137.8,1.85-10.61-.09-8.89,10.52-9,17.52-.12,35,0,53.26,0C1198.85,502.36,1191,547.35,1182.91,593.54Z"/>
+            <path d="M1448.49,456.91c-2.46,14.27-4.68,27.44-7,40.61-4.78,27.21-8.91,54.56-14.59,81.59-8.77,41.68-35.8,65.17-78.32,68.31a146.17,146.17,0,0,1-37-1.84c-36.73-6.8-55.27-32.24-51.29-69.48,1.49-13.93,4.27-27.72,6.64-41.53,4.16-24.19,8.49-48.34,12.64-72.52.54-3.18,1.2-5.28,5.21-5.24,18,.17,35.94.06,53.91.08a28.29,28.29,0,0,1,3.59.5c-2.74,16.09-5.43,31.86-8.1,47.63q-5.52,32.64-11,65.27c-.1.61-.2,1.22-.27,1.83-1.35,12,2,19.29,10.1,22.15,10.53,3.71,23.41.19,28-9.51,4-8.4,6.45-17.8,8.15-27,5.93-32.24,11.19-64.6,16.93-96.88.27-1.51,2.64-3.77,4.06-3.78C1409.19,456.82,1428.16,456.91,1448.49,456.91Z"/>
+            <path d="M1587.05,548.08c34,20.11,19.4,69.89-5.77,84a95.13,95.13,0,0,1-46.17,12.27c-34.69.37-69.38.11-104.07.08a23,23,0,0,1-3.17-.53c10.74-62.24,21.44-124.28,32.26-187h7.72c28.08,0,56.17,0,84.25-.08,12.33-.05,24.38,1.67,35.67,6.61,26.3,11.5,34.53,46.67,16,69.07C1599.06,538.24,1592.82,542.78,1587.05,548.08Z"/>
+            <path d="M1489.24,604.39c2.14-12.82,4.09-25.16,6.41-37.43.24-1.29,2.69-3,4.15-3.06,10.31-.21,20.64-.39,30.93.14,11.07.57,17.45,6.32,18.51,15.54,1.19,10.42-4.28,19.35-14.1,22.67a30.74,30.74,0,0,1-9,2C1514,604.53,1501.88,604.39,1489.24,604.39Z"/>
+            <path d="M1501.08,533.69c2.06-11.48,3.89-22.44,6.14-33.32.32-1.58,2.61-3.9,4-3.94,9.47-.25,19-.5,28.43.29s14.44,5.44,15.7,12.42a19.87,19.87,0,0,1-9.84,21c-3,1.63-6.51,3.28-9.84,3.4C1524.44,534,1513.15,533.69,1501.08,533.69Z"/>
+            <path class="cls-1" d="M1497.48,598.22c1.79-10,3.3-18.43,4.82-26.94,10.7,0,21.14-.6,31.44.37,3,.28,7.73,5,7.84,7.8.18,4.58-2.43,9.46-4.63,13.83-.82,1.63-3.75,2.91-5.81,3.07C1520.17,597.18,1509.18,597.61,1497.48,598.22Z"/>
+            <path class="cls-1" d="M1509.52,527.27c1.33-7.5,2.29-14,3.78-20.4a5.5,5.5,0,0,1,4-3.3c7-.2,14,0,21,.36,4.49.25,8.94,1.66,9.86,6.79,1,5.59-1.22,10.76-6.37,12.88s-11,2.9-16.66,3.55C1520.26,527.71,1515.3,527.27,1509.52,527.27Z"/>
+          </svg>
+        </div>
+        <p class="footer__desc">bold graphics. oversized fits. perfect is boring. — india.</p>
+        <div class="footer__socials">
+          <a href="#" class="f-soc">ig</a>
+          <a href="#" class="f-soc">tw</a>
+          <a href="#" class="f-soc">yt</a>
+        </div>
+      </div>
+
+      <div>
+        <div class="footer__col-h">shop</div>
+        <ul class="footer__links">
+          <li><a href="#">all products</a></li>
+          <li><a href="#">midnight in mumbai</a></li>
+          <li><a href="#">bad touch</a></li>
+          <li><a href="#">please i'm a star</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="footer__col-h">info</div>
+        <ul class="footer__links">
+          <li><a href="#">about whÿclub</a></li>
+          <li><a href="#">contact</a></li>
+          <li><a href="#">size guide</a></li>
+          <li><a href="#">stockists</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="footer__col-h">policies</div>
+        <ul class="footer__links">
+          <li><a href="#">shipping</a></li>
+          <li><a href="#">returns</a></li>
+          <li><a href="#">privacy policy</a></li>
+          <li><a href="#">terms of service</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer__btm">
+      <div class="footer__copy">© 2025 whÿclub — perfect is boring</div>
+      <div class="footer__pay">
+        <span class="pay">visa</span>
+        <span class="pay">mastercard</span>
+        <span class="pay">upi</span>
+        <span class="pay">razorpay</span>
+        <span class="pay">cod</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ═══════════════════════════════════════════════
+     JS
+═══════════════════════════════════════════════ -->
+<script>
+(function () {
+
+  /* ── Entrance ── */
+  const entrance = document.getElementById('entrance');
+
+  // Everything finishes animating by ~2.3s.
+  // Hold for 0.6s of premium stillness, then TV-off at 2.9s.
+  setTimeout(() => {
+    entrance.classList.add('tvoff');
+    document.body.classList.remove('locked');
+  }, 2900);
+
+  // Remove from DOM once collapse is done (~0.5s)
+  setTimeout(() => {
+    entrance.style.display = 'none';
+  }, 3500);
+
+
+  /* ── Hero Carousel ── */
+  const heroTrack  = document.getElementById('heroTrack');
+  const heroSlides = heroTrack.querySelectorAll('.hero__slide');
+  const heroDotBtns = document.getElementById('heroDots').querySelectorAll('.hero__dot');
+  let heroCur = 0, heroTimer;
+
+  function heroGoTo(n) {
+    heroSlides[heroCur].classList.remove('is-active');
+    heroDotBtns[heroCur].classList.remove('is-active');
+    heroCur = (n + heroSlides.length) % heroSlides.length;
+    heroSlides[heroCur].classList.add('is-active');
+    heroDotBtns[heroCur].classList.add('is-active');
+    heroTrack.style.transform = `translateX(-${heroCur * 100}%)`;
+    clearInterval(heroTimer);
+    heroTimer = setInterval(() => heroGoTo(heroCur + 1), 4500);
+  }
+
+  document.getElementById('heroPrev').addEventListener('click', () => heroGoTo(heroCur - 1));
+  document.getElementById('heroNext').addEventListener('click', () => heroGoTo(heroCur + 1));
+  heroDotBtns.forEach(d => d.addEventListener('click', () => heroGoTo(+d.dataset.i)));
+
+  let heroTx = 0;
+  heroTrack.addEventListener('touchstart', e => { heroTx = e.touches[0].clientX; }, { passive: true });
+  heroTrack.addEventListener('touchend',   e => {
+    const dx = heroTx - e.changedTouches[0].clientX;
+    if (Math.abs(dx) > 40) heroGoTo(heroCur + (dx > 0 ? 1 : -1));
+  }, { passive: true });
+
+  heroTimer = setInterval(() => heroGoTo(heroCur + 1), 4500);
+
+
+  /* ── Mobile nav ── */
+  const burgerBtn = document.getElementById('burgerBtn');
+  const mobNav    = document.getElementById('mobNav');
+  const mobBg     = document.getElementById('mobBg');
+  const mobX      = document.getElementById('mobX');
+
+  const openMob  = () => { mobNav.classList.add('open');  document.body.style.overflow = 'hidden'; };
+  const closeMob = () => { mobNav.classList.remove('open'); document.body.style.overflow = ''; };
+
+  burgerBtn.addEventListener('click', openMob);
+  mobBg.addEventListener('click', closeMob);
+  mobX.addEventListener('click', closeMob);
+
+
+  /* ── Scroll-in fade for cards ── */
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity   = '1';
+        e.target.style.transform = 'translateY(0)';
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('.p-card, .r-cell, .mani-img').forEach((el, i) => {
+    el.style.opacity    = '0';
+    el.style.transform  = 'translateY(20px)';
+    el.style.transition = `opacity 0.5s ease ${i * 0.08}s, transform 0.5s ease ${i * 0.08}s`;
+    io.observe(el);
+  });
+
+})();
+</script>
+
+</body>
+</html>
