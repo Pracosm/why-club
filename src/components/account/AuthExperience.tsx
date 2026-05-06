@@ -1,120 +1,128 @@
+import { useState } from "react";
 import { useConvexAuth, useQuery } from "convex/react";
-import { ConvexClientBoundary } from "@/components/react/ConvexClientBoundary";
-import { AuthActionButton } from "@/components/react/StorefrontClient";
+import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { api } from "../../../convex/_generated/api";
+import { AuthChoicePanel } from "@/components/auth/AuthChoicePanel";
+import { ConvexClientBoundary } from "@/components/react/ConvexClientBoundary";
+
+type AuthMode = "login" | "signup";
+
+type AuthExperienceProps = {
+  mode?: AuthMode;
+};
 
 function AuthOfflinePanel() {
   return (
-    <section className="store-shell mx-auto max-w-6xl px-4 py-12 md:px-6 md:py-16">
-      <div className="rounded-[2rem] border border-black bg-white p-8 md:p-10">
-        <p className="text-[0.62rem] font-semibold uppercase tracking-[0.34em] text-red-600">
-          auth
+    <section className="flex min-h-[80vh] items-center justify-center p-6">
+      <div className="w-full max-w-xl space-y-5 text-center">
+        <p className="text-xs font-semibold uppercase tracking-[0.28em] text-neutral-400">
+          System status
         </p>
-        <h1 className="mt-4 text-4xl font-black uppercase tracking-[-0.06em] text-black md:text-6xl">
-          Sign-in is configured for live mode.
+        <h1 className="text-5xl font-black uppercase tracking-tight text-neutral-950 md:text-7xl">
+          Auth offline
         </h1>
-        <p className="mt-5 max-w-2xl text-sm leading-7 text-neutral-600">
-          Connect Convex Auth to enable Google sign-in and sign-up. The storefront
-          design is live either way, but authentication requires the deployed auth
-          provider.
+        <p className="mx-auto max-w-sm text-sm leading-6 text-neutral-500">
+          Configure `PUBLIC_CONVEX_URL` and start Convex to enable Google and email sign-in.
         </p>
       </div>
     </section>
   );
 }
 
-function AuthLivePanel() {
+function LoadingState() {
+  return (
+    <div className="flex min-h-screen flex-col items-center justify-center bg-[#f7f4ee]">
+      <div className="relative h-16 w-16">
+        <div className="absolute inset-0 rounded-full border-2 border-neutral-200" />
+        <div className="absolute inset-0 animate-spin rounded-full border-t-2 border-neutral-950" />
+      </div>
+      <p className="mt-6 text-xs font-semibold uppercase tracking-[0.24em] text-neutral-400">
+        Checking session
+      </p>
+    </div>
+  );
+}
+
+function AuthLivePanel({ initialMode }: { initialMode: AuthMode }) {
   const { isAuthenticated, isLoading } = useConvexAuth();
   const user = useQuery(api.users.me, isAuthenticated ? {} : "skip");
+  const [mode, setMode] = useState<AuthMode>(initialMode);
+
+  if (isLoading) {
+    return <LoadingState />;
+  }
+
+  if (isAuthenticated && user) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#f7f4ee] px-6">
+        <div className="w-full max-w-md rounded-[2rem] border border-neutral-200 bg-white p-8 text-center shadow-sm">
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
+            <CheckCircle2 className="h-6 w-6" />
+          </div>
+          <p className="mt-6 text-xs font-semibold uppercase tracking-[0.24em] text-neutral-400">
+            Signed in
+          </p>
+          <h1 className="mt-3 text-3xl font-semibold tracking-tight text-neutral-950">
+            Hello, {user.name?.split(" ")[0] ?? "member"}.
+          </h1>
+          <a
+            href="/account"
+            className="mt-8 flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-neutral-950 px-4 text-sm font-semibold text-white transition hover:bg-neutral-800"
+          >
+            Open account
+            <ArrowRight className="h-4 w-4" />
+          </a>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <section className="store-shell mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-16">
-      <div className="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
-        <article className="rounded-[2rem] border border-black bg-white p-8 md:p-10">
-          <p className="text-[0.62rem] font-semibold uppercase tracking-[0.34em] text-red-600">
-            auth
-          </p>
-          <h1 className="mt-4 text-4xl font-black uppercase tracking-[-0.06em] text-black md:text-6xl">
-            Enter the club without the friction.
+    <main className="min-h-[100dvh] overflow-hidden bg-[#f6f1e8] px-4 py-8 text-neutral-950 md:px-8 md:py-14">
+      <div className="pointer-events-none fixed inset-0 opacity-[0.08] [background-image:radial-gradient(circle_at_20%_20%,#111_1px,transparent_1px)] [background-size:18px_18px]" />
+      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_12%_16%,rgba(223,255,63,0.42),transparent_24rem),radial-gradient(circle_at_88%_18%,rgba(255,255,255,0.9),transparent_28rem),linear-gradient(135deg,rgba(255,255,255,0.62),rgba(246,241,232,0))]" />
+
+      <div className="relative mx-auto grid min-h-[calc(100dvh-7rem)] w-full max-w-6xl items-center gap-8 lg:grid-cols-[minmax(0,1fr)_27rem]">
+        <section className="py-10 md:py-24">
+          <div className="inline-flex rounded-full bg-black p-1 text-[0.62rem] font-black uppercase tracking-[0.22em] text-white">
+            <span className="rounded-full bg-[#DFFF3F] px-3 py-1 text-black">Member access</span>
+            <span className="px-3 py-1">Guest checkout stays open</span>
+          </div>
+
+          <h1 className="heading-condensed mt-8 max-w-4xl text-[4.6rem] font-black uppercase leading-[0.78] tracking-[-0.06em] text-black md:text-[8.5rem]">
+            Get back to the drop.
           </h1>
-          <p className="mt-5 max-w-2xl text-sm leading-7 text-neutral-600">
-            The current flow uses Google for both sign-up and sign-in, then hands
-            the session to Convex so checkout and order history stay tied to one
-            account.
+
+          <p className="mt-7 max-w-xl font-editorial text-lg font-semibold leading-8 text-black/62">
+            Sign in only if you want your WhÿClub account. You can still browse,
+            cart, and checkout without creating one.
           </p>
 
-          <div className="mt-8 flex flex-wrap gap-3">
-            {isLoading ? (
-              <span className="store-btn store-btn--ghost">auth...</span>
-            ) : isAuthenticated ? (
-              <>
-                <a href="/account" className="store-btn store-btn--dark">
-                  go to account
-                </a>
-                <a href="/account/orders" className="store-btn">
-                  open orders
-                </a>
-              </>
-            ) : (
-              <AuthActionButton className="store-btn store-btn--dark" />
-            )}
-          </div>
-
-          {isAuthenticated && user && (
-            <div className="mt-8 rounded-[1.5rem] border border-black bg-[#f7f4ef] p-5">
-              <p className="text-[0.62rem] font-semibold uppercase tracking-[0.32em] text-neutral-500">
-                signed in as
-              </p>
-              <p className="mt-3 text-2xl font-black uppercase tracking-[-0.05em] text-black">
-                {user.name ?? user.email ?? "WhÿClub member"}
-              </p>
-            </div>
-          )}
-        </article>
-
-        <aside className="rounded-[2rem] border border-black bg-black p-8 text-white md:p-10">
-          <p className="text-[0.62rem] font-semibold uppercase tracking-[0.34em] text-red-400">
-            why sign in
-          </p>
-          <div className="mt-6 grid gap-4">
-            <div className="rounded-[1.5rem] border border-white/10 bg-white/5 p-5">
-              <h2 className="text-lg font-black uppercase tracking-[0.04em]">
-                Faster checkout
-              </h2>
-              <p className="mt-3 text-sm leading-7 text-neutral-400">
-                Saved identity and shipping details feed directly into the live
-                checkout flow.
-              </p>
-            </div>
-            <div className="rounded-[1.5rem] border border-white/10 bg-white/5 p-5">
-              <h2 className="text-lg font-black uppercase tracking-[0.04em]">
-                Real order history
-              </h2>
-              <p className="mt-3 text-sm leading-7 text-neutral-400">
-                Paid orders appear in your account with the same payment and
-                fulfilment states stored in the backend.
-              </p>
-            </div>
-            <div className="rounded-[1.5rem] border border-white/10 bg-white/5 p-5">
-              <h2 className="text-lg font-black uppercase tracking-[0.04em]">
-                Single customer identity
-              </h2>
-              <p className="mt-3 text-sm leading-7 text-neutral-400">
-                Google handles both first-time sign-up and returning sign-in. No
-                separate password workflow is required in this version.
-              </p>
+          <div className="mt-10 max-w-2xl rounded-[2rem] bg-black/[0.045] p-1.5 ring-1 ring-black/[0.06]">
+            <div className="grid gap-3 rounded-[calc(2rem-0.375rem)] bg-white/78 p-4 shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] sm:grid-cols-3">
+              {["Faster returns", "Drop alerts", "Receipt lookup"].map((item) => (
+                <div key={item} className="rounded-[1.35rem] bg-[#f7f2ea] px-4 py-4">
+                  <p className="text-[0.68rem] font-black uppercase tracking-[0.14em] text-black">
+                    {item}
+                  </p>
+                </div>
+              ))}
             </div>
           </div>
-        </aside>
+        </section>
+
+        <div className="rounded-[2.35rem] bg-black/[0.055] p-1.5 ring-1 ring-black/[0.06] shadow-[0_30px_90px_-58px_rgba(0,0,0,0.8)]">
+          <AuthChoicePanel mode={mode} onModeChange={setMode} />
+        </div>
       </div>
-    </section>
+    </main>
   );
 }
 
-export default function AuthExperience() {
+export default function AuthExperience({ mode = "login" }: AuthExperienceProps) {
   return (
     <ConvexClientBoundary fallback={<AuthOfflinePanel />}>
-      <AuthLivePanel />
+      <AuthLivePanel initialMode={mode} />
     </ConvexClientBoundary>
   );
 }

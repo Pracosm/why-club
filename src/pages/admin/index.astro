@@ -1,59 +1,8 @@
 ---
-import AdminOverviewLive from "@/components/admin/AdminOverviewLive";
-import AdminTable from "@/components/admin/AdminTable.astro";
+import AdminLiveApp from "../../components/admin/AdminLiveApp.tsx";
 import AdminLayout from "@/layouts/AdminLayout.astro";
-import { demoCollections, demoProducts, demoReviews } from "@/lib/demo-data";
-
-const totalInventory = demoProducts.reduce((sum, product) => sum + product.inventoryCount, 0);
-const projectedRevenue = demoProducts.reduce(
-  (sum, product) => sum + product.inventoryCount * product.sellingPrice,
-  0,
-);
-const recentOrders = [
-  ["WC-24031", "Midnight in Mumbai", "Paid", "Bengaluru", "April 3"],
-  ["WC-24026", "Bad Touch", "Processing", "Delhi", "April 2"],
-  ["WC-24018", "Please I'm a Star", "Delivered", "Mumbai", "March 24"],
-];
 ---
 
 <AdminLayout title="WhÿClub admin | overview">
-  <div class="space-y-8">
-    <header class="space-y-3">
-      <p class="text-[0.68rem] uppercase tracking-[0.35em] text-neutral-500">overview</p>
-      <h1 class="font-display text-6xl leading-[0.9] tracking-[-0.09em] text-neutral-950">
-        Operations that feel tighter than the catalog.
-      </h1>
-      <p class="max-w-3xl text-sm leading-8 text-neutral-600">
-        This admin shell is ready for live Convex queries later. For now it renders
-        the same demo catalog and policy model the backend seed path uses.
-      </p>
-    </header>
-
-    <AdminOverviewLive
-      client:load
-      demoProductsLength={demoProducts.length}
-      demoCollectionsLength={demoCollections.length}
-      totalInventory={totalInventory}
-      projectedRevenue={projectedRevenue}
-    />
-
-    <AdminTable
-      title="Recent orders"
-      description="A live version of this table later subscribes to Convex order queries. The layout already accounts for order status, customer city, and product mapping."
-      columns={["Order", "Product", "Status", "City", "Placed"]}
-      rows={recentOrders}
-    />
-
-    <AdminTable
-      title="Review moderation queue"
-      description="Review approval stays practical: verify the quote, keep the product mapping, and publish only the strong signal."
-      columns={["Author", "Product", "Rating", "Quote"]}
-      rows={demoReviews.map((review) => [
-        review.author,
-        review.productSlug,
-        `${review.rating}/5`,
-        review.comment,
-      ])}
-    />
-  </div>
+  <AdminLiveApp client:only="react" section="overview" />
 </AdminLayout>

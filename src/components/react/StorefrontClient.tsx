@@ -94,44 +94,60 @@ function HeaderAuthState() {
   const { signOut } = useAuthActions();
 
   if (isLoading) {
-    return <span className={buttonClassName("ghost")}>auth...</span>;
+    return (
+      <span className="flex items-center gap-2 font-editorial text-sm font-extrabold uppercase tracking-[0.08em] text-black/40">
+        <User className="w-4 h-4" strokeWidth={1.5} />
+        <span className="hidden md:inline">...</span>
+      </span>
+    );
   }
 
   if (!isAuthenticated) {
     return (
-      <a href="/auth" className={buttonClassName()}>
-        auth
+      <a href="/login" className="flex items-center gap-2 font-editorial text-sm font-extrabold uppercase tracking-[0.08em] text-black/70 transition-colors hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-black">
+        <User className="w-4 h-4" strokeWidth={1.5} />
+        <span className="hidden md:inline">Account</span>
       </a>
     );
   }
 
   return (
-    <div className="flex items-center gap-2">
-      <a href="/account" className={buttonClassName()}>
-        {user?.name?.split(" ")[0] ?? "account"}
+    <div className="flex items-center gap-4">
+      <a href="/account" className="flex items-center gap-2 font-editorial text-sm font-extrabold uppercase tracking-[0.08em] text-black/70 transition-colors hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-black">
+        <User className="w-4 h-4" strokeWidth={1.5} />
+        <span className="hidden md:inline">{user?.name?.split(" ")[0] ?? "Account"}</span>
       </a>
       <button
         type="button"
-        onClick={() => void signOut()}
-        className={buttonClassName("ghost")}
+        onClick={() => {
+          void (async () => {
+            await signOut();
+            window.location.reload();
+          })();
+        }}
+        className="hidden font-editorial text-sm font-extrabold uppercase tracking-[0.08em] text-black/40 transition-colors hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-black md:inline"
       >
-        sign out
+        Sign Out
       </button>
     </div>
   );
 }
+
+import { ShoppingBag, User } from "lucide-react";
 
 export function HeaderAuthCartControls() {
   const { count } = useCartState();
 
   if (!hasConvexUrl()) {
     return (
-      <div className="flex items-center gap-2">
-        <a href="/auth" className={buttonClassName("ghost")}>
-          auth offline
+      <div className="flex items-center gap-6">
+        <a href="/login" className="flex items-center gap-2 font-editorial text-sm font-extrabold uppercase tracking-[0.08em] text-black/70 transition-colors hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-black">
+          <User className="w-4 h-4" strokeWidth={1.5} />
+          <span className="hidden md:inline">Account</span>
         </a>
-        <a href="/cart" className={buttonClassName("dark")}>
-          cart {count}
+        <a href="/cart" className="flex items-center gap-2 font-editorial text-sm font-extrabold uppercase tracking-[0.08em] text-black/70 transition-colors hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-black">
+          <ShoppingBag className="w-4 h-4" strokeWidth={1.5} />
+          <span className="hidden md:inline">Cart ({count})</span>
         </a>
       </div>
     );
@@ -139,10 +155,11 @@ export function HeaderAuthCartControls() {
 
   return (
     <ConvexGate>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-6">
         <HeaderAuthState />
-        <a href="/cart" className={buttonClassName("dark")}>
-          cart {count}
+        <a href="/cart" className="flex items-center gap-2 font-editorial text-sm font-extrabold uppercase tracking-[0.08em] text-black/70 transition-colors hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-black">
+          <ShoppingBag className="w-4 h-4" strokeWidth={1.5} />
+          <span className="hidden md:inline">Cart ({count})</span>
         </a>
       </div>
     </ConvexGate>
@@ -157,7 +174,7 @@ export function ProductAddToCart(props: {
   soldOutSizes: string[];
   checkoutHref: string;
 }) {
-  const { count, cart, setAndPersistCart } = useCartState();
+  const { cart, setAndPersistCart } = useCartState();
   const initialSize =
     props.availableSizes.find((size) => !props.soldOutSizes.includes(size)) ??
     props.availableSizes[0] ??
@@ -165,6 +182,7 @@ export function ProductAddToCart(props: {
   const [selectedSize, setSelectedSize] = useState(initialSize);
   const [quantity, setQuantity] = useState(1);
   const [message, setMessage] = useState("");
+  const [added, setAdded] = useState(false);
 
   useEffect(() => {
     if (!selectedSize) {
@@ -187,22 +205,17 @@ export function ProductAddToCart(props: {
     selectedSize.length > 0 && !props.soldOutSizes.includes(selectedSize);
 
   return (
-    <div className="rounded-[1.75rem] border border-black bg-white/70 p-5 shadow-[0_24px_60px_rgba(17,17,17,0.08)]">
-      <div className="flex items-center justify-between gap-4 border-b border-black pb-4">
-        <div>
-          <p className="text-[0.62rem] font-semibold uppercase tracking-[0.32em] text-neutral-500">
-            cart
-          </p>
-          <p className="mt-2 text-sm uppercase tracking-[0.12em] text-neutral-900">
-            {count} item{count === 1 ? "" : "s"} loaded
-          </p>
-        </div>
-        <span className="text-sm font-semibold uppercase tracking-[0.18em] text-neutral-900">
-          {props.priceLabel}
-        </span>
+    <div className="flex flex-col mt-6">
+      <div className="flex items-center justify-between mb-3">
+        <h3 className="font-editorial text-[0.65rem] font-bold uppercase tracking-widest text-black">
+          Select Size
+        </h3>
+        <button className="font-editorial text-[0.65rem] text-black/50 hover:text-black">
+          Size guide
+        </button>
       </div>
 
-      <div className="mt-5 flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-2 mb-8">
         {props.availableSizes.map((size) => {
           const soldOut = props.soldOutSizes.includes(size);
           const active = selectedSize === size;
@@ -214,12 +227,12 @@ export function ProductAddToCart(props: {
               disabled={soldOut}
               onClick={() => setSelectedSize(size)}
               className={[
-                "rounded-full border px-3 py-2 text-[0.62rem] font-semibold uppercase tracking-[0.3em] transition",
+                "flex h-10 min-w-[3rem] items-center justify-center rounded-lg border px-3 text-xs font-bold uppercase tracking-widest transition-colors",
                 soldOut
-                  ? "cursor-not-allowed border-black/5 bg-neutral-100 text-neutral-400 line-through"
+                  ? "cursor-not-allowed border-black/5 bg-[#F5F5F5] text-black/20"
                   : active
                     ? "border-black bg-black text-white"
-                    : "border-black/15 bg-white text-neutral-800 hover:border-black",
+                    : "border-black/10 bg-white text-black hover:border-black/30",
               ].join(" ")}
             >
               {size}
@@ -228,66 +241,63 @@ export function ProductAddToCart(props: {
         })}
       </div>
 
-      <div className="mt-5 flex items-center gap-3">
-        <button
-          type="button"
-          onClick={() => setQuantity((value) => Math.max(1, value - 1))}
-          className="rounded-full border border-black px-3 py-2 text-sm text-neutral-800"
-        >
-          -
-        </button>
-        <span className="w-8 text-center text-sm font-semibold">{quantity}</span>
-        <button
-          type="button"
-          onClick={() => setQuantity((value) => Math.min(10, value + 1))}
-          className="rounded-full border border-black px-3 py-2 text-sm text-neutral-800"
-        >
-          +
-        </button>
-        <div className="ml-auto text-[0.62rem] font-semibold uppercase tracking-[0.28em] text-neutral-500">
-          {props.productTitle}
+      <div className="flex items-center gap-3">
+        <div className="flex h-12 items-center rounded-lg border border-black/10 bg-white px-1">
+          <button
+            type="button"
+            onClick={() => setQuantity((value) => Math.max(1, value - 1))}
+            className="flex h-10 w-10 items-center justify-center text-black/50 hover:text-black"
+          >
+            -
+          </button>
+          <span className="w-8 text-center text-sm font-bold text-black">{quantity}</span>
+          <button
+            type="button"
+            onClick={() => setQuantity((value) => Math.min(10, value + 1))}
+            className="flex h-10 w-10 items-center justify-center text-black/50 hover:text-black"
+          >
+            +
+          </button>
         </div>
-      </div>
 
-      <div className="mt-6 flex flex-wrap gap-3">
         <button
           type="button"
           disabled={!canAdd}
           onClick={() => {
+            if (added) {
+              window.location.assign("/cart");
+              return;
+            }
             if (!canAdd) {
               setMessage("Select an available size first.");
               return;
             }
-
             const nextCart = updateCartQuantity(cart, {
               productSlug: props.productSlug,
               size: selectedSize,
               quantity,
             });
-
             setAndPersistCart(nextCart);
-            setMessage(`Added ${quantity} to cart.`);
+            setAdded(true);
+            setMessage(`Added ${quantity} to cart. Opening cart...`);
+            window.setTimeout(() => {
+              window.location.assign("/cart");
+            }, 700);
           }}
-          className="rounded-full bg-black px-5 py-3 text-[0.62rem] font-semibold uppercase tracking-[0.3em] text-white transition hover:bg-[#1c1c1c] disabled:cursor-not-allowed disabled:bg-neutral-400"
+          className="flex-1 flex h-12 items-center justify-center rounded-lg bg-black px-6 text-[0.65rem] font-bold uppercase tracking-widest text-white transition-transform active:scale-[0.98] disabled:cursor-not-allowed disabled:bg-black/20"
         >
-          add to cart
+          {added ? "View Cart" : "Add to Cart"}
         </button>
-        <a
-          href="/cart"
-          className="rounded-full border border-black px-5 py-3 text-[0.62rem] font-semibold uppercase tracking-[0.3em] text-neutral-900 transition hover:bg-black hover:text-white"
-        >
-          view cart
-        </a>
-        <a
-          href={props.checkoutHref}
-          className="rounded-full border border-black/10 px-5 py-3 text-[0.62rem] font-semibold uppercase tracking-[0.3em] text-neutral-600 transition hover:border-black/30 hover:text-neutral-950"
-        >
-          direct checkout
-        </a>
+
+        <button className="flex h-12 w-12 items-center justify-center rounded-lg border border-black/10 text-black/50 hover:text-black hover:border-black/30 transition-colors">
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+          </svg>
+        </button>
       </div>
 
       {message && (
-        <p className="mt-4 text-[0.68rem] uppercase tracking-[0.24em] text-neutral-500">
+        <p className="mt-3 text-[0.65rem] font-bold uppercase tracking-widest text-green-600">
           {message}
         </p>
       )}

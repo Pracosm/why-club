@@ -1,0 +1,11 @@
+---
+import AuthExperience from "../components/account/AuthExperience.tsx";
+import StorefrontLayout from "@/layouts/StorefrontLayout.astro";
+---
+
+<StorefrontLayout
+  title="WhÿClub | signup"
+  description="Create your WhÿClub account."
+>
+  <AuthExperience client:only="react" mode="signup" />
+</StorefrontLayout>

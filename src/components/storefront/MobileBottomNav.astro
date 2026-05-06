@@ -1,0 +1,31 @@
+---
+const links = [
+  { href: "/", icon: "⌂", label: "Home" },
+  { href: "/collections", icon: "▱", label: "Shop" },
+  { href: "/collections/drop-01", icon: "□", label: "Drops" },
+  { href: "/account", icon: "♡", label: "Wishlist" },
+  { href: "/account", icon: "♙", label: "Account" },
+];
+---
+
+<nav class="fixed bottom-0 left-0 right-0 z-50 glass-panel border-t border-black/10 px-4 py-3 pb-safe lg:hidden">
+  <ul class="flex items-center justify-between">
+    {links.map((link) => (
+      <li>
+        <a
+          href={link.href}
+          class="flex flex-col items-center gap-1 p-2 text-neutral-500 transition-colors hover:text-black focus:text-black active:text-black"
+        >
+          <span class="text-xl leading-none">{link.icon}</span>
+          <span class="text-[0.55rem] font-bold uppercase tracking-widest">{link.label}</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</nav>
+
+<style>
+  .pb-safe {
+    padding-bottom: max(env(safe-area-inset-bottom), 0.75rem);
+  }
+</style>

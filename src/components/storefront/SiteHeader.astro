@@ -1,52 +1,41 @@
 ---
-import { demoCollections, siteCopy } from "@/lib/demo-data";
-import { HeaderAuthCartControls } from "@/components/react/StorefrontClient";
+import { HeaderAuthCartControls } from "../react/StorefrontClient.tsx";
 
 const navLinks = [
+  { href: "/collections/drop-01", label: "new drop" },
   { href: "/collections", label: "shop" },
-  { href: `/collections/${demoCollections[0]?.slug ?? "drop-01"}`, label: "drop 01" },
-  { href: "/story", label: "story" },
-  { href: "/returns", label: "returns" },
-  { href: "/contact", label: "contact" },
+  { href: "/collections", label: "collections" },
+  { href: "/account/wishlist", label: "wishlist" },
 ];
 
-const marqueeItems = [
-  "free shipping on prepaid",
-  siteCopy.slogan,
-  "cash on delivery",
-  "100% cotton",
-  "new drop live",
-];
+const pathname = Astro.url.pathname;
+const isHome = pathname === "/";
 ---
 
-<header class="sticky top-0 z-50 border-b border-black bg-[rgba(255,253,248,0.92)] backdrop-blur-xl">
-  <div class="overflow-hidden border-b border-black bg-black py-2 text-[0.62rem] font-semibold uppercase tracking-[0.34em] text-white">
-    <div class="store-marquee">
-      {[...marqueeItems, ...marqueeItems].map((item) => (
-        <span class="flex items-center gap-6">
-          <span>{item}</span>
-          <span class="text-red-500">•</span>
-        </span>
-      ))}
+<header class="w-full z-50 bg-[#F9F9F9]">
+  {isHome && (
+    <div class="bg-[#DFFF3F] px-4 py-2 text-center flex items-center justify-center">
+      <p class="text-[0.65rem] font-bold uppercase tracking-widest text-black">
+        NEW DROP LIVE • FREE SHIPPING ON PREPAID ORDERS
+      </p>
     </div>
-  </div>
+  )}
 
-  <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 md:px-6">
-    <div class="flex items-center gap-8">
-      <a href="/" class="text-lg font-black uppercase tracking-[-0.08em] text-black md:text-2xl">
-        WhÿClub
-      </a>
-      <nav class="hidden items-center gap-5 md:flex">
-        {navLinks.map((link) => (
-          <a
-            href={link.href}
-            class="text-[0.62rem] font-semibold uppercase tracking-[0.28em] text-neutral-600 transition hover:text-black"
-          >
-            {link.label}
-          </a>
-        ))}
-      </nav>
+  <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-6 border-b border-black/5">
+    <a href="/" class="heading-condensed text-4xl font-black tracking-tight text-black" aria-label="WhÿClub home">
+      WHŸCLUB
+    </a>
+
+    <nav class="hidden items-center gap-9 md:flex" aria-label="Primary navigation">
+      {navLinks.map((link) => (
+        <a href={link.href} class="font-editorial text-sm font-extrabold uppercase tracking-[0.08em] text-black/70 transition-colors hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-black">
+          {link.label}
+        </a>
+      ))}
+    </nav>
+
+    <div class="flex items-center gap-6">
+      <HeaderAuthCartControls client:only="react" />
     </div>
-    <HeaderAuthCartControls client:load />
   </div>
 </header>

@@ -30,7 +30,7 @@ export const demoCollections: DemoCollection[] = [
     title: "Drop 01",
     description:
       "The first WhÿClub drop, anchored in feelings over briefs and oversized silhouettes built for after-hours city energy.",
-    imageUrl: "/images/tee-midnight.jpg",
+    imageUrl: "/images/tee-midnight.webp",
     isActive: true,
   },
 ];
@@ -45,7 +45,7 @@ export const demoProducts: DemoProduct[] = [
     mrp: 1999,
     sellingPrice: 1999,
     inventoryCount: 18,
-    images: ["/images/tee-midnight.jpg"],
+    images: ["/images/tee-midnight.webp"],
     hsnCode: "61091000",
     isPublished: true,
     badge: "new",
@@ -67,7 +67,7 @@ export const demoProducts: DemoProduct[] = [
     mrp: 1799,
     sellingPrice: 1799,
     inventoryCount: 10,
-    images: ["/images/tee-badtouch.jpg"],
+    images: ["/images/tee-badtouch.webp"],
     hsnCode: "61091000",
     isPublished: true,
     badge: "new",
@@ -89,7 +89,7 @@ export const demoProducts: DemoProduct[] = [
     mrp: 1999,
     sellingPrice: 1699,
     inventoryCount: 8,
-    images: ["/images/tee-star-new.png"],
+    images: ["/images/tee-star-new.webp"],
     hsnCode: "61091000",
     isPublished: true,
     badge: "sale",
@@ -101,6 +101,28 @@ export const demoProducts: DemoProduct[] = [
     weightGsm: 260,
     story:
       "Cream base, star-burst attitude, and just enough irreverence to make the point before you even say a word.",
+  },
+  {
+    slug: "star-gaze",
+    collectionSlug: "drop-01",
+    title: "Star Gaze",
+    description:
+      "A black oversized tee with stripped-back star energy for the days when the fit needs to stay sharper than the room.",
+    mrp: 1699,
+    sellingPrice: 1699,
+    inventoryCount: 12,
+    images: ["/images/tee-star-new.webp"],
+    hsnCode: "61091000",
+    isPublished: true,
+    badge: "new",
+    tags: ["oversized", "graphic tee", "black", "made in india"],
+    sizes: ["XS", "S", "M", "L", "XL", "XXL"],
+    soldOutSizes: [],
+    fit: "oversized",
+    material: "100% cotton",
+    weightGsm: 260,
+    story:
+      "Minimal color, maximum attitude. Built for clean black fits, late entries, and one-line compliments.",
   },
 ];
 

@@ -1,0 +1,25 @@
+---
+interface Props {
+  label: string;
+  image: string;
+  href: string;
+  variant?: "circular" | "rectangular";
+}
+
+const { label, image, href, variant = "circular" } = Astro.props;
+---
+
+<a href={href} class="group flex flex-col items-center gap-3">
+  {variant === "circular" ? (
+    <div class="relative flex aspect-square w-20 items-center justify-center overflow-hidden rounded-full border border-black/5 bg-[#f1f1f1] transition-transform duration-300 group-hover:scale-105">
+      <img src={image} alt={label} loading="lazy" class="h-full w-full object-cover object-top" />
+    </div>
+  ) : (
+    <div class="relative flex aspect-[4/5] w-full items-center justify-center overflow-hidden rounded-[1.5rem] border border-black/5 bg-[#f1f1f1] transition-transform duration-300 group-hover:scale-[1.02]">
+      <img src={image} alt={label} loading="lazy" class="h-full w-full object-cover object-top" />
+    </div>
+  )}
+  <strong class="text-[0.65rem] font-bold uppercase tracking-widest text-black">
+    {label}
+  </strong>
+</a>

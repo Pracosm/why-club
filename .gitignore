@@ -1,6 +1,7 @@
 # build output
 dist/
 .astro/
+.agents/skills/
 
 # dependencies
 node_modules/
@@ -19,9 +20,26 @@ pnpm-debug.log*
 # generated worker types
 worker-configuration.d.ts
 
+# test artifacts
+test-results/
+playwright-report/
+
 # stale transpiled Convex duplicates
 convex/*.js
 convex/lib/*.js
 
 # macOS-specific files
 .DS_Store
+.claude/skills/convex
+convex/_generated/ai/ai-files.state.json
+
+# agent skills and guide files
+.agents/skills/*/SKILL.md
+.agents/skills/*/guide/*
+.agents/skills/convex-quickstart/SKILL.md
+
+# alternative editor/tool dotfiles
+.claude/
+.vscode-server/
+.agents/skills/convex-performance-audit/SKILL.md
+docs/

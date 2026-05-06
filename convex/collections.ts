@@ -1,16 +1,18 @@
-import { mutation, query } from "./_generated/server";
+import { paginationOptsValidator } from "convex/server";
+import { mutation, query, type MutationCtx } from "./_generated/server";
 import { v } from "convex/values";
 import { requireAnyRole } from "./lib/auth";
 import { appError } from "./lib/errors";
+import type { Id } from "./_generated/dataModel";
 
 async function ensureUniqueSlug(
-  ctx: any,
+  ctx: MutationCtx,
   slug: string,
-  currentId?: string,
+  currentId?: Id<"collections">,
 ) {
   const existing = await ctx.db
     .query("collections")
-    .withIndex("by_slug", (q: any) => q.eq("slug", slug))
+    .withIndex("by_slug", (q) => q.eq("slug", slug))
     .unique();
 
   if (existing && existing._id !== currentId) {
@@ -33,6 +35,24 @@ export const listAll = query({
   handler: async (ctx) => {
     await requireAnyRole(ctx, ["super_admin", "admin", "editor"]);
     return await ctx.db.query("collections").collect();
+  },
+});
+
+export const listAllPaginated = query({
+  args: {
+    paginationOpts: paginationOptsValidator,
+    isActive: v.optional(v.boolean()),
+  },
+  handler: async (ctx, args) => {
+    await requireAnyRole(ctx, ["super_admin", "admin", "editor"]);
+    if (args.isActive !== undefined) {
+      return await ctx.db
+        .query("collections")
+        .withIndex("by_active", (q) => q.eq("isActive", args.isActive ?? false))
+        .paginate(args.paginationOpts);
+    }
+
+    return await ctx.db.query("collections").paginate(args.paginationOpts);
   },
 });
 
@@ -87,7 +107,7 @@ export const update = mutation({
 
     await ensureUniqueSlug(ctx, args.slug, args.collectionId);
 
-    await ctx.db.patch("collections", args.collectionId, {
+    await ctx.db.patch(args.collectionId, {
       title: args.title,
       slug: args.slug,
       description: args.description,

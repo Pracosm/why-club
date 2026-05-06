@@ -55,7 +55,7 @@ export const applyDemoSeed = internalMutation({
         .unique();
 
       if (existing) {
-        await ctx.db.patch("users", existing._id, {
+        await ctx.db.patch(existing._id, {
           role,
           updatedAt: now,
         });
@@ -82,7 +82,7 @@ export const applyDemoSeed = internalMutation({
         .unique();
 
       if (existing) {
-        await ctx.db.patch("collections", existing._id, {
+        await ctx.db.patch(existing._id, {
           title: collection.title,
           description: collection.description,
           imageUrl: collection.imageUrl,
@@ -130,7 +130,7 @@ export const applyDemoSeed = internalMutation({
       };
 
       if (existing) {
-        await ctx.db.patch("products", existing._id, payload);
+        await ctx.db.patch(existing._id, payload);
         productIds.set(product.slug, existing._id);
         continue;
       }
@@ -148,7 +148,7 @@ export const applyDemoSeed = internalMutation({
       .unique();
 
     if (coupon) {
-      await ctx.db.patch("coupons", coupon._id, {
+      await ctx.db.patch(coupon._id, {
         title: "Drop 01 launch",
         discountType: "percentage",
         discountValue: 10,
@@ -198,7 +198,7 @@ export const applyDemoSeed = internalMutation({
       };
 
       if (existing) {
-        await ctx.db.patch("reviews", existing._id, payload);
+        await ctx.db.patch(existing._id, payload);
       } else {
         await ctx.db.insert("reviews", {
           ...payload,

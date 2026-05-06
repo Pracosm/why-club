@@ -57,7 +57,7 @@ export const updateRole = mutation({
       throw appError("NOT_FOUND", "User not found.");
     }
 
-    await ctx.db.patch("users", args.userId, {
+    await ctx.db.patch(args.userId, {
       role: args.role,
       updatedAt: Date.now(),
     });
@@ -70,13 +70,40 @@ export const updateRole = mutation({
   },
 });
 
+export const updateProfile = mutation({
+  args: {
+    name: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const user = await requireUser(ctx);
+    const name = args.name.trim();
+
+    if (name.length < 2) {
+      throw appError("INVALID_INPUT", "Name must be at least 2 characters.");
+    }
+
+    if (name.length > 80) {
+      throw appError("INVALID_INPUT", "Name must be 80 characters or fewer.");
+    }
+
+    await ctx.db.patch(user._id, {
+      name,
+      updatedAt: Date.now(),
+    });
+
+    return {
+      ok: true,
+    };
+  },
+});
+
 export const updateShippingAddress = mutation({
   args: {
     shippingAddress: shippingAddressValidator,
   },
   handler: async (ctx, args) => {
     const user = await requireUser(ctx);
-    await ctx.db.patch("users", user._id, {
+    await ctx.db.patch(user._id, {
       shippingAddress: args.shippingAddress,
       updatedAt: Date.now(),
     });
@@ -93,8 +120,8 @@ export const bootstrapSession = mutation({
     const user = await requireUser(ctx);
     const identity = await ctx.auth.getUserIdentity();
 
-    await ctx.db.patch("users", user._id, {
-      tokenIdentifier: identity?.subject,
+    await ctx.db.patch(user._id, {
+      tokenIdentifier: identity?.tokenIdentifier,
       lastSeenAt: Date.now(),
       updatedAt: Date.now(),
     });

@@ -1,5 +1,4 @@
 ---
-import AdminSidebar from "@/components/admin/AdminSidebar.astro";
 import "@/styles/global.css";
 
 interface Props {
@@ -7,7 +6,7 @@ interface Props {
   description?: string;
 }
 
-const { title, description = "WhÿClub demo admin" } = Astro.props;
+const { title, description = "WhÿClub live admin" } = Astro.props;
 ---
 
 <!doctype html>
@@ -39,12 +38,7 @@ const { title, description = "WhÿClub demo admin" } = Astro.props;
       }
     </style>
   </head>
-  <body class="bg-[#f4f1ea] text-neutral-950 antialiased">
-    <div class="grid min-h-screen md:grid-cols-[18rem_minmax(0,1fr)]">
-      <AdminSidebar />
-      <main class="px-5 py-8 md:px-8 md:py-10">
-        <slot />
-      </main>
-    </div>
+  <body class="bg-[#f8fafc] text-slate-950 antialiased">
+    <slot />
   </body>
 </html>

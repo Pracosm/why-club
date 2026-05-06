@@ -1,29 +1,8 @@
 ---
-import AdminTable from "@/components/admin/AdminTable.astro";
+import AdminLiveApp from "../../components/admin/AdminLiveApp.tsx";
 import AdminLayout from "@/layouts/AdminLayout.astro";
-
-const coupons = [
-  ["DROP01", "10% off", "₹1,500", "12 / 50", "April 30"],
-  ["FIRSTCLUB", "₹200 off", "₹999", "4 / 30", "May 15"],
-];
 ---
 
 <AdminLayout title="WhÿClub admin | coupons">
-  <div class="space-y-8">
-    <header class="space-y-3">
-      <p class="text-[0.68rem] uppercase tracking-[0.35em] text-neutral-500">coupons</p>
-      <h1 class="font-display text-6xl leading-[0.9] tracking-[-0.09em] text-neutral-950">Discounts without margin drift.</h1>
-      <p class="max-w-3xl text-sm leading-8 text-neutral-600">
-        Coupon support is modeled for minimum order value, usage tracking, and expiry.
-        This shell keeps the management surface simple and operational.
-      </p>
-    </header>
-
-    <AdminTable
-      title="Coupon list"
-      description="Seeded examples to shape the eventual Convex coupon CRUD."
-      columns={["Code", "Offer", "Minimum", "Usage", "Expiry"]}
-      rows={coupons}
-    />
-  </div>
+  <AdminLiveApp client:only="react" section="coupons" />
 </AdminLayout>

@@ -1,5 +1,5 @@
 ---
-import CartExperience from "@/components/cart/CartExperience";
+import CartExperience from "../components/cart/CartExperience.tsx";
 import StorefrontLayout from "@/layouts/StorefrontLayout.astro";
 ---
 
@@ -7,5 +7,5 @@ import StorefrontLayout from "@/layouts/StorefrontLayout.astro";
   title="WhÿClub | cart"
   description="Review the current WhyClub basket before moving into checkout."
 >
-  <CartExperience client:load />
+  <CartExperience client:only="react" />
 </StorefrontLayout>

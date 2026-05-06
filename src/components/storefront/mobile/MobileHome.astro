@@ -1,0 +1,175 @@
+---
+import CategoryCard from "../CategoryCard.astro";
+import TrustBadge from "../TrustBadge.astro";
+import ProductCard from "../ProductCard.astro";
+import { formatInr } from "@/lib/utils";
+import type { demoProducts } from "@/lib/demo-data";
+
+interface Props {
+  heroProduct: typeof demoProducts[0];
+  categories: Array<{ label: string; image: string; href: string }>;
+  trustItems: Array<{ icon: string; title: string; body: string }>;
+  products: typeof demoProducts;
+}
+
+const { heroProduct, categories, trustItems, products } = Astro.props;
+---
+
+<div class="redesign-root flex flex-col pb-24 relative bg-[#F9F9F9]">
+
+  <!-- Mobile Hero Section -->
+  <section class="relative overflow-hidden w-full">
+    <div class="relative flex h-[calc(100svh-7.25rem)] min-h-[36rem] max-h-[46rem] w-full overflow-x-auto snap-x snap-mandatory bg-[#F5F2EA] hide-scrollbar">
+      {heroProduct.images.slice(0, 3).map((img: string, idx: number) => (
+        <div class="relative w-full shrink-0 snap-center flex justify-between h-full">
+          <img src={img} alt={`${heroProduct.title} ${idx + 1}`} class="absolute inset-y-0 right-[-18%] z-0 h-full w-[96%] object-cover object-right-top sm:right-[-10%]" loading="eager" />
+
+          <div class="absolute inset-0 z-0 bg-[linear-gradient(90deg,#F9F9F9_0%,#F9F9F9_31%,rgba(249,249,249,0.78)_47%,rgba(249,249,249,0.2)_68%,rgba(249,249,249,0)_100%)]"></div>
+          <div class="absolute inset-x-0 bottom-0 z-0 h-44 bg-gradient-to-t from-[#F9F9F9] via-[#F9F9F9]/82 to-transparent"></div>
+
+          <div class="relative z-10 flex h-full w-[82%] flex-col items-start justify-end p-6 pb-20">
+            <span class="inline-block rounded-md bg-[#DFFF3F] px-2.5 py-1 text-[0.65rem] font-black uppercase tracking-widest text-black mb-3 shadow-sm">
+              New Drop
+            </span>
+
+            <h1 class="heading-condensed text-[4.15rem] font-black leading-[0.82] mb-2 text-black drop-shadow-sm min-[390px]:text-[4.65rem]">
+              PLEASE<br />I'M A STAR
+            </h1>
+
+            <p class="font-editorial text-xs font-semibold text-black/70 mb-4">
+              Bold graphics. Oversized fits.
+            </p>
+
+            <div class="flex items-center gap-2 mb-5">
+              <strong class="text-2xl font-black text-black">{formatInr(heroProduct.sellingPrice)}</strong>
+              <span class="text-xs font-medium text-black/40 line-through mt-1">{formatInr(heroProduct.mrp)}</span>
+            </div>
+
+            <a href={`/products/${heroProduct.slug}`} class="flex min-h-12 items-center justify-center rounded-full bg-black px-8 text-[0.7rem] font-bold uppercase tracking-widest text-white transition-transform active:scale-95 shadow-xl">
+              Shop The Drop <span class="ml-2 font-normal">→</span>
+            </a>
+          </div>
+
+          <div class="absolute bottom-9 left-6 z-10 flex items-center gap-2 text-[0.65rem] font-bold tracking-widest text-black/60">
+            <span>0{idx + 1}</span>
+            <span class="w-6 h-[1px] bg-black/20"></span>
+            <span>03</span>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+  <style>
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+
+  <!-- Categories -->
+  <section class="pt-2 pb-10 px-5">
+    <div class="flex items-end justify-between mb-6">
+      <h2 class="font-editorial text-sm font-bold uppercase tracking-widest text-black">Shop By Category</h2>
+      <a href="/collections" class="font-editorial text-xs text-black/50 hover:text-black">View all</a>
+    </div>
+
+    <div class="grid grid-cols-4 gap-2">
+      {categories.map((category) => (
+        <a href={category.href} class="flex flex-col items-center gap-3 group">
+          <div class="w-[4.5rem] h-[4.5rem] rounded-full overflow-hidden bg-black/5">
+            <img src={category.image} alt={category.label} class="w-full h-full object-cover object-top group-hover:scale-105 smooth-transition" />
+          </div>
+          <span class="text-[0.55rem] font-bold uppercase tracking-widest text-black text-center">{category.label}</span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- Trust Badges -->
+  <section class="px-5 py-2">
+    <div class="grid grid-cols-4 gap-2">
+      <div class="rounded-xl border border-black/5 bg-white p-3 flex flex-col items-center text-center shadow-sm">
+        <svg class="w-5 h-5 text-black mb-2 opacity-80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+        <span class="text-[0.5rem] font-bold uppercase tracking-widest text-black leading-tight mb-1">Premium<br/>Quality</span>
+        <span class="text-[0.45rem] font-medium text-black/50">100% Cotton</span>
+      </div>
+      <div class="rounded-xl border border-black/5 bg-white p-3 flex flex-col items-center text-center shadow-sm">
+        <svg class="w-5 h-5 text-black mb-2 opacity-80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="5" width="20" height="14" rx="2"></rect><path d="M12 12h.01"></path></svg>
+        <span class="text-[0.5rem] font-bold uppercase tracking-widest text-black leading-tight mb-1">Cash On<br/>Returns</span>
+        <span class="text-[0.45rem] font-medium text-black/50">Available For India</span>
+      </div>
+      <div class="rounded-xl border border-black/5 bg-white p-3 flex flex-col items-center text-center shadow-sm">
+        <svg class="w-5 h-5 text-black mb-2 opacity-80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
+        <span class="text-[0.5rem] font-bold uppercase tracking-widest text-black leading-tight mb-1">Easy<br/>Returns</span>
+        <span class="text-[0.45rem] font-medium text-black/50">7 Day Policy</span>
+      </div>
+      <div class="rounded-xl border border-black/5 bg-white p-3 flex flex-col items-center text-center shadow-sm">
+        <svg class="w-5 h-5 text-black mb-2 opacity-80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+        <span class="text-[0.5rem] font-bold uppercase tracking-widest text-black leading-tight mb-1">Secure<br/>Payments</span>
+        <span class="text-[0.45rem] font-medium text-black/50">UPI, Cards & More</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Latest Drops -->
+  <section class="px-5 py-10">
+    <div class="flex items-end justify-between mb-6">
+      <h2 class="font-editorial text-sm font-bold uppercase tracking-widest text-black">Latest Drops</h2>
+      <a href="/collections" class="font-editorial text-xs text-black/50 hover:text-black">View all</a>
+    </div>
+    <div class="grid grid-cols-2 gap-3">
+      {products.map((product) => (
+        <a href={`/products/${product.slug}`} class="group flex flex-col">
+          <div class="relative w-full aspect-[4/5] rounded-[1.25rem] overflow-hidden bg-[#F1F1F1] mb-3">
+            <img src={product.images[0]} alt={product.title} class="w-full h-full object-cover object-top smooth-transition group-hover:scale-105" />
+            <div class="absolute top-3 left-3 bg-white/80 backdrop-blur-sm rounded px-1.5 py-0.5 text-[0.5rem] font-bold uppercase tracking-widest text-black">
+              NEW
+            </div>
+            <button class="absolute top-3 right-3 text-black/40 hover:text-red-500 smooth-transition">
+              <span aria-hidden="true" class="text-lg leading-none">♡</span>
+            </button>
+          </div>
+          <h3 class="font-editorial text-[0.65rem] font-bold uppercase tracking-widest text-black mb-1 truncate">{product.title}</h3>
+          <div class="flex items-center gap-1.5">
+            <span class="text-xs font-black text-black">{formatInr(product.sellingPrice)}</span>
+            {product.mrp > product.sellingPrice && (
+              <span class="text-[0.6rem] text-black/40 line-through">{formatInr(product.mrp)}</span>
+            )}
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- Mobile Bottom Nav (Static replication for exactly matching screenshot) -->
+  <div class="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-black/5 px-6 pb-safe pt-3 flex items-center justify-between shadow-[0_-10px_40px_rgba(0,0,0,0.03)]">
+    <a href="/" class="flex flex-col items-center gap-1 text-black">
+      <span aria-hidden="true" class="text-lg leading-none">⌂</span>
+      <span class="text-[0.45rem] font-bold uppercase tracking-widest">Home</span>
+    </a>
+    <a href="/collections" class="flex flex-col items-center gap-1 text-black/40 hover:text-black transition-colors">
+      <span aria-hidden="true" class="text-lg leading-none">▱</span>
+      <span class="text-[0.45rem] font-bold uppercase tracking-widest">Shop</span>
+    </a>
+    <a href="/collections" class="flex flex-col items-center gap-1 text-black/40 hover:text-black transition-colors">
+      <span aria-hidden="true" class="text-lg leading-none">▦</span>
+      <span class="text-[0.45rem] font-bold uppercase tracking-widest">Collections</span>
+    </a>
+    <a href="#" class="flex flex-col items-center gap-1 text-black/40 hover:text-black transition-colors">
+      <span aria-hidden="true" class="text-lg leading-none">♡</span>
+      <span class="text-[0.45rem] font-bold uppercase tracking-widest">Wishlist</span>
+    </a>
+    <a href="#" class="flex flex-col items-center gap-1 text-black/40 hover:text-black transition-colors">
+      <span aria-hidden="true" class="text-lg leading-none">○</span>
+      <span class="text-[0.45rem] font-bold uppercase tracking-widest">Account</span>
+    </a>
+  </div>
+  <style>
+    .pb-safe {
+      padding-bottom: max(env(safe-area-inset-bottom), 1.5rem);
+    }
+  </style>
+</div>

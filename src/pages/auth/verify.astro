@@ -1,0 +1,27 @@
+---
+import StorefrontLayout from "@/layouts/StorefrontLayout.astro";
+import VerifyOtp from "@/components/account/VerifyOtp";
+
+const email = Astro.url.searchParams.get("email");
+const returnTo = Astro.url.searchParams.get("returnTo") ?? "/account";
+
+// If no email is present, we probably should redirect back to login
+if (!email) {
+  return Astro.redirect("/login");
+}
+---
+
+<StorefrontLayout
+  title="WhÿClub | Verify Identity"
+  description="Enter the verification code sent to your email."
+>
+  <VerifyOtp client:only="react" email={email} redirectTo={returnTo} />
+</StorefrontLayout>
+
+<script>
+  // Handle back button/navigation
+  window.addEventListener('popstate', () => {
+    // If the user hits back, we want them to go back to the email entry step
+    window.location.href = '/login';
+  });
+</script>

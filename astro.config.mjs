@@ -9,6 +9,13 @@ export default defineConfig({
   integrations: [react()],
   vite: {
     plugins: [tailwindcss()],
+    optimizeDeps: {
+      exclude: [
+        "astro:runtime:dev-toolbar",
+        "@astrojs/react",
+        "@astrojs/cloudflare",
+      ],
+    },
   },
   adapter: cloudflare(),
 });

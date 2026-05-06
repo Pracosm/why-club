@@ -1,0 +1,108 @@
+---
+import { formatInr } from "@/lib/utils";
+import type { demoProducts } from "@/lib/demo-data";
+import { MobileProductAddToCart } from "../../react/MobileProductAddToCart.tsx";
+
+interface Props {
+  product: typeof demoProducts[0];
+  reviews: any[];
+}
+
+const { product, reviews } = Astro.props;
+---
+
+<div class="redesign-root pb-32 bg-[#F9F9F9] min-h-screen relative">
+  <!-- Top Bar -->
+  <header class="fixed top-0 left-0 right-0 z-50 bg-[#F9F9F9]/90 backdrop-blur-md px-5 py-4 flex items-center justify-between">
+    <button onclick="history.back()" class="text-black transition-colors">
+      <span aria-hidden="true" class="text-xl leading-none">←</span>
+    </button>
+    <a href="/" class="heading-condensed text-3xl font-black tracking-tight pt-1 text-black">WHŸCLUB</a>
+    <div class="flex items-center gap-4">
+      <button class="text-black transition-colors"><span aria-hidden="true" class="text-lg leading-none">↗</span></button>
+      <a href="/cart" class="relative text-black transition-colors">
+        <span aria-hidden="true" class="text-lg leading-none">▱</span>
+        <span class="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-black text-[0.55rem] font-bold text-white">2</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Hero Image Area -->
+  <section class="relative pt-16 px-4">
+    <div class="relative w-full aspect-[3/4] bg-[#F5F5F5] rounded-[2rem] overflow-hidden">
+      <img src={product.images[0]} alt={product.title} class="h-full w-full object-cover object-top" />
+
+      <!-- Heart Icon -->
+      <button class="absolute top-4 right-4 h-10 w-10 flex items-center justify-center rounded-full bg-white/50 backdrop-blur-sm text-black">
+        <span aria-hidden="true" class="text-lg leading-none">♡</span>
+      </button>
+
+      <!-- Carousel Dots Overlay -->
+      <div class="absolute bottom-16 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-black/40 backdrop-blur-md rounded-full px-3 py-1.5">
+        <div class="h-1.5 w-1.5 rounded-full bg-white"></div>
+        <div class="h-1.5 w-1.5 rounded-full bg-white/40"></div>
+        <div class="h-1.5 w-1.5 rounded-full bg-white/40"></div>
+        <div class="h-1.5 w-1.5 rounded-full bg-white/40"></div>
+        <div class="h-1.5 w-1.5 rounded-full bg-white/40"></div>
+        <div class="h-1.5 w-1.5 rounded-full bg-white/40"></div>
+      </div>
+    </div>
+
+    <!-- Product Info White Card overlapping the image -->
+    <div class="relative -mt-10 bg-white rounded-[1.5rem] p-6 shadow-[0_-5px_20px_rgba(0,0,0,0.03)] border border-black/5 mx-auto">
+      <span class="inline-block rounded-md bg-[#DFFF3F] px-2.5 py-1 text-[0.65rem] font-black uppercase tracking-widest text-black mb-3">
+        {product.badge || "NEW DROP"}
+      </span>
+
+      <h1 class="heading-condensed text-4xl font-black text-black leading-none mb-2">
+        {product.title}
+      </h1>
+
+      <p class="font-editorial text-xs font-medium text-black/60 mb-3">
+        {product.fit} Fit • 100% Premium Option • {product.weightGsm} GSM
+      </p>
+
+      <div class="flex items-center gap-3">
+        <strong class="text-xl font-black text-black">{formatInr(product.sellingPrice)}</strong>
+      </div>
+
+      <div class="mt-3 flex items-center gap-1.5">
+        <span class="text-xs font-bold text-black/70">4.9</span>
+        <div class="flex text-black text-[0.6rem]">★★★★★</div>
+        <span class="text-xs text-black/40 ml-1">(120 reviews)</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Details Section -->
+  <section class="px-5 py-6">
+    <MobileProductAddToCart
+      client:only="react"
+      productSlug={product.slug}
+      productTitle={product.title}
+      priceLabel={formatInr(product.sellingPrice)}
+      availableSizes={product.sizes}
+      soldOutSizes={product.soldOutSizes}
+      checkoutHref={`/checkout?product=${product.slug}`}
+    />
+
+    <div class="mt-8">
+      <h3 class="font-editorial text-sm font-bold uppercase tracking-widest text-black mb-3">Description</h3>
+      <p class="font-editorial text-xs leading-relaxed text-black/70 mb-4">
+        <strong class="text-black block mb-1">A bold handprint. A bolder statement.</strong>
+        The {product.title} is treated from heavyweight {product.weightGsm} GSM cotton for a structured drape and all-day comfort.
+      </p>
+
+      <ul class="flex flex-col gap-1.5 text-xs text-black/70 font-medium mb-4 list-disc pl-4">
+        <li>100% premium cotton</li>
+        <li>Oversized fit</li>
+        <li>High quality screen print</li>
+        <li>Made in India</li>
+      </ul>
+
+      <button class="font-editorial text-xs font-bold uppercase tracking-widest text-black flex items-center gap-1">
+        READ MORE <span class="text-[0.6rem]">⌄</span>
+      </button>
+    </div>
+  </section>
+</div>

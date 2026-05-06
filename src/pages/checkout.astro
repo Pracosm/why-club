@@ -1,5 +1,5 @@
 ---
-import CheckoutExperience from "@/components/checkout/CheckoutExperience";
+import CheckoutExperience from "../components/checkout/CheckoutExperience.tsx";
 import StorefrontLayout from "@/layouts/StorefrontLayout.astro";
 import { demoProducts, getProductBySlug } from "@/lib/demo-data";
 
@@ -12,7 +12,7 @@ const selectedProduct =
   description="Client-driven checkout for the Astro + Convex storefront, with secure server-side order creation and Razorpay handoff."
 >
   <CheckoutExperience
-    client:load
+    client:only="react"
     initialProductSlug={selectedProduct?.slug}
     demoProducts={demoProducts}
   />

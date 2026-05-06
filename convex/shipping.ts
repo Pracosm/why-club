@@ -54,7 +54,8 @@ export const listForOrder = query({
     }
 
     const canAccess =
-      order.userId === user._id || ["super_admin", "admin"].includes(user.role);
+      (order.userId && order.userId === user._id) ||
+      ["super_admin", "admin"].includes(user.role);
 
     if (!canAccess) {
       throw appError("FORBIDDEN", "You do not have access to this shipment.");
@@ -161,15 +162,31 @@ export const createShipmentForPaidOrder = internalAction({
       };
     }
 
-    const user = await ctx.runQuery(internal.users.getByIdInternal, {
-      userId: order.userId,
-    });
+    if (order.shiprocketShipmentId) {
+      return {
+        skipped: true,
+        reason: "Shiprocket shipment already exists for this order.",
+      };
+    }
+
+    if (!order.shippingAddress) {
+      return {
+        skipped: true,
+        reason: "Order has no shipping address yet.",
+      };
+    }
+
+    const user = order.userId
+      ? await ctx.runQuery(internal.users.getByIdInternal, {
+          userId: order.userId,
+        })
+      : null;
 
     const shipment = await createShipment({
       orderId: `${order._id}`,
       totalAmount: order.totalAmount,
       customerName: order.shippingAddress.fullName,
-      email: user?.email,
+      email: order.customerEmail ?? user?.email,
       phoneNumber: order.shippingAddress.phoneNumber,
       addressLine1: order.shippingAddress.line1,
       addressLine2: order.shippingAddress.line2,
@@ -234,7 +251,7 @@ export const recordTrackingUpdateInternal = internalMutation({
       ...args,
     });
 
-    await ctx.db.patch("orders", args.orderId, {
+    await ctx.db.patch(args.orderId, {
       status: mapTrackingStatus(args.trackingStatus),
       updatedAt: Date.now(),
     });

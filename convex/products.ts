@@ -1,17 +1,20 @@
-import { mutation, query } from "./_generated/server";
+import { paginationOptsValidator } from "convex/server";
+import { mutation, query, type MutationCtx } from "./_generated/server";
 import { v } from "convex/values";
 import { requireAnyRole } from "./lib/auth";
 import { appError } from "./lib/errors";
+import { validateProductInput } from "./lib/productRules";
 import { productBadgeValidator } from "./lib/validators";
+import type { Id } from "./_generated/dataModel";
 
 async function ensureUniqueSlug(
-  ctx: any,
+  ctx: MutationCtx,
   slug: string,
-  currentId?: string,
+  currentId?: Id<"products">,
 ) {
   const existing = await ctx.db
     .query("products")
-    .withIndex("by_slug", (q: any) => q.eq("slug", slug))
+    .withIndex("by_slug", (q) => q.eq("slug", slug))
     .unique();
 
   if (existing && existing._id !== currentId) {
@@ -34,6 +37,26 @@ export const listAll = query({
   handler: async (ctx) => {
     await requireAnyRole(ctx, ["super_admin", "admin", "editor"]);
     return await ctx.db.query("products").collect();
+  },
+});
+
+export const listAllPaginated = query({
+  args: {
+    paginationOpts: paginationOptsValidator,
+    isPublished: v.optional(v.boolean()),
+  },
+  handler: async (ctx, args) => {
+    await requireAnyRole(ctx, ["super_admin", "admin", "editor"]);
+    if (args.isPublished !== undefined) {
+      return await ctx.db
+        .query("products")
+        .withIndex("by_published", (q) =>
+          q.eq("isPublished", args.isPublished ?? false),
+        )
+        .paginate(args.paginationOpts);
+    }
+
+    return await ctx.db.query("products").paginate(args.paginationOpts);
   },
 });
 
@@ -134,6 +157,11 @@ export const create = mutation({
   },
   handler: async (ctx, args) => {
     await requireAnyRole(ctx, ["super_admin", "admin", "editor"]);
+    const validationError = validateProductInput(args);
+    if (validationError) {
+      throw appError("INVALID_INPUT", validationError);
+    }
+
     await ensureUniqueSlug(ctx, args.slug);
     const now = Date.now();
 
@@ -174,9 +202,14 @@ export const update = mutation({
       throw appError("NOT_FOUND", "Product not found.");
     }
 
+    const validationError = validateProductInput(args);
+    if (validationError) {
+      throw appError("INVALID_INPUT", validationError);
+    }
+
     await ensureUniqueSlug(ctx, args.slug, args.productId);
 
-    await ctx.db.patch("products", args.productId, {
+    await ctx.db.patch(args.productId, {
       collectionId: args.collectionId,
       title: args.title,
       slug: args.slug,
@@ -211,6 +244,18 @@ export const remove = mutation({
     const product = await ctx.db.get("products", args.productId);
     if (!product) {
       throw appError("NOT_FOUND", "Product not found.");
+    }
+
+    const orders = await ctx.db.query("orders").collect();
+    const isAttachedToOrder = orders.some((order) =>
+      order.items.some((item) => item.productId === args.productId),
+    );
+
+    if (isAttachedToOrder) {
+      throw appError(
+        "CONFLICT",
+        "Product is attached to existing orders. Unpublish it instead of deleting it.",
+      );
     }
 
     await ctx.db.delete("products", args.productId);

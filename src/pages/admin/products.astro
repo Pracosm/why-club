@@ -1,33 +1,8 @@
 ---
-import AdminTable from "@/components/admin/AdminTable.astro";
+import AdminLiveApp from "../../components/admin/AdminLiveApp.tsx";
 import AdminLayout from "@/layouts/AdminLayout.astro";
-import { demoProducts } from "@/lib/demo-data";
-import { formatInr } from "@/lib/utils";
 ---
 
 <AdminLayout title="WhÿClub admin | products">
-  <div class="space-y-8">
-    <header class="space-y-3">
-      <p class="text-[0.68rem] uppercase tracking-[0.35em] text-neutral-500">products</p>
-      <h1 class="font-display text-6xl leading-[0.9] tracking-[-0.09em] text-neutral-950">Catalog control.</h1>
-      <p class="max-w-3xl text-sm leading-8 text-neutral-600">
-        Product CRUD later plugs into Convex mutations, but the admin information
-        model is already mapped: pricing, inventory, merchandising badge, and publish state.
-      </p>
-    </header>
-
-    <AdminTable
-      title="All products"
-      description="A working table shell for product management."
-      columns={["Title", "Price", "MRP", "Inventory", "Badge", "Published"]}
-      rows={demoProducts.map((product) => [
-        product.title,
-        formatInr(product.sellingPrice),
-        formatInr(product.mrp),
-        `${product.inventoryCount}`,
-        product.badge,
-        product.isPublished ? "yes" : "no",
-      ])}
-    />
-  </div>
+  <AdminLiveApp client:only="react" section="products" />
 </AdminLayout>

@@ -1,223 +1,46 @@
 ---
-import ProductCard from "@/components/storefront/ProductCard.astro";
-import ReviewCard from "@/components/storefront/ReviewCard.astro";
-import SectionHeader from "@/components/storefront/SectionHeader.astro";
 import StorefrontLayout from "@/layouts/StorefrontLayout.astro";
-import {
-  contactFaqs,
-  demoCollections,
-  demoProducts,
-  demoReviews,
-  returnsPolicy,
-  siteCopy,
-} from "@/lib/demo-data";
-import { formatInr } from "@/lib/utils";
+import DesktopHome from "@/components/storefront/desktop/DesktopHome.astro";
+import MobileHome from "@/components/storefront/mobile/MobileHome.astro";
+import { demoProducts, siteCopy } from "@/lib/demo-data";
 
-const leadCollection = demoCollections[0];
-const heroProducts = demoProducts.slice(0, 3);
+const heroProduct = demoProducts.find((product) => product.slug === "please-im-a-star") ?? demoProducts[0];
+const starGaze = demoProducts.find((product) => product.slug === "star-gaze") ?? heroProduct;
+const midnight = demoProducts.find((product) => product.slug === "midnight-in-mumbai") ?? demoProducts[0];
+
+const categories = [
+  { label: "Tees", image: midnight.images[0], href: "/collections/drop-01" },
+  { label: "Hoodies", image: starGaze.images[0], href: "/collections" },
+  { label: "Bottoms", image: heroProduct.images[0], href: "/collections" },
+  { label: "Accessories", image: starGaze.images[0], href: "/collections" },
+];
+
+const trustItems = [
+  { icon: "◇", title: "Premium Quality", body: "100% Cotton" },
+  { icon: "▱", title: "Cash On Delivery", body: "Pan India" },
+  { icon: "↻", title: "Easy Returns", body: "7 Day Policy" },
+  { icon: "▢", title: "Secure Payments", body: "UPI & Cards" },
+];
 ---
 
 <StorefrontLayout
-  title="WhÿClub | streetwear for the ones who get it"
+  title="WhÿClub | bold oversized streetwear"
   description={siteCopy.heroBody}
 >
-  <section class="store-shell mx-auto max-w-7xl px-4 py-6 md:px-6 md:py-8">
-    <div class="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
-      <article class="relative overflow-hidden rounded-[2rem] border border-black bg-black text-white">
-        <div class="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(224,0,0,0.28),transparent_32%),linear-gradient(180deg,rgba(255,255,255,0.04),transparent)]"></div>
-        <div class="relative flex min-h-[34rem] flex-col justify-between p-6 md:p-8 xl:min-h-[42rem]">
-          <div>
-            <p class="text-[0.62rem] font-semibold uppercase tracking-[0.34em] text-red-400">
-              {siteCopy.heroEyebrow}
-            </p>
-            <h1 class="mt-4 max-w-4xl text-5xl font-black uppercase leading-[0.88] tracking-[-0.08em] md:text-7xl xl:text-[5.75rem]">
-              {siteCopy.heroTitle}
-            </h1>
-            <p class="mt-5 max-w-xl text-sm leading-8 text-neutral-300 md:text-base">
-              {siteCopy.heroBody}
-            </p>
-          </div>
-
-          <div class="grid gap-6 md:grid-cols-[1fr_auto] md:items-end">
-            <div class="grid gap-3 md:max-w-xl">
-              <div class="flex flex-wrap gap-2">
-                <span class="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-[0.62rem] font-semibold uppercase tracking-[0.3em] text-neutral-200">
-                  oversized fits
-                </span>
-                <span class="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-[0.62rem] font-semibold uppercase tracking-[0.3em] text-neutral-200">
-                  india first
-                </span>
-                <span class="rounded-full border border-white/15 bg-white/5 px-4 py-2 text-[0.62rem] font-semibold uppercase tracking-[0.3em] text-neutral-200">
-                  graphic heavy
-                </span>
-              </div>
-            </div>
-            <div class="flex flex-wrap gap-3">
-              <a href={`/collections/${leadCollection.slug}`} class="store-btn store-btn--inverse">
-                shop drop
-              </a>
-              <a href="/story" class="store-btn store-btn--outline-light">
-                story
-              </a>
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <div class="grid gap-4">
-        {heroProducts.map((product) => (
-          <article class="overflow-hidden rounded-[2rem] border border-black bg-white">
-            <div class="grid gap-0 md:grid-cols-[0.92fr_1.08fr]">
-              <img
-                src={product.images[0]}
-                alt={product.title}
-                class="h-full min-h-[16rem] w-full object-cover object-top"
-              />
-              <div class="flex flex-col justify-between p-5 md:p-6">
-                <div>
-                  <p class="text-[0.62rem] font-semibold uppercase tracking-[0.3em] text-red-600">
-                    {product.badge}
-                  </p>
-                  <h2 class="mt-3 text-3xl font-black uppercase tracking-[-0.05em] text-black">
-                    {product.title}
-                  </h2>
-                  <p class="mt-3 text-sm leading-7 text-neutral-600">
-                    {product.story}
-                  </p>
-                </div>
-                <div class="mt-6 flex items-center justify-between gap-3 border-t border-black pt-4">
-                  <span class="text-[0.72rem] font-bold uppercase tracking-[0.18em] text-black">
-                    {formatInr(product.sellingPrice)}
-                  </span>
-                  <a href={`/products/${product.slug}`} class="store-btn">
-                    view product
-                  </a>
-                </div>
-              </div>
-            </div>
-          </article>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <section class="overflow-hidden border-y border-black bg-black py-3 text-[0.62rem] font-semibold uppercase tracking-[0.34em] text-white">
-    <div class="store-marquee">
-      {[
-        "perfect is boring",
-        "midnight in mumbai",
-        "bad touch",
-        "please i'm a star",
-        "oversized · 100% cotton",
-        "cash on delivery",
-        "free shipping on prepaid",
-        "perfect is boring",
-        "midnight in mumbai",
-        "bad touch",
-        "please i'm a star",
-        "oversized · 100% cotton",
-      ].map((item) => (
-        <span class="flex items-center gap-6">
-          <span>{item}</span>
-          <span class="text-red-500">•</span>
-        </span>
-      ))}
-    </div>
-  </section>
-
-  <section class="store-shell mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-16">
-    <SectionHeader
-      eyebrow="featured pieces"
-      title="Oversized tees with cleaner aggression."
-      body="The product direction stays narrow on purpose: fewer shapes, stronger graphics, and heavier fabric that reads immediately on body."
+  <div class="hidden lg:block">
+    <DesktopHome
+      heroProduct={heroProduct}
+      categories={categories}
+      trustItems={trustItems}
+      products={demoProducts}
     />
-    <div class="mt-8 grid gap-px overflow-hidden border border-black bg-black md:grid-cols-3">
-      {demoProducts.map((product) => (
-        <div class="bg-white">
-          <ProductCard product={product} />
-        </div>
-      ))}
-    </div>
-  </section>
-
-  <section class="store-shell mx-auto max-w-7xl px-4 pb-12 md:px-6 md:pb-16">
-    <div class="grid gap-4 xl:grid-cols-[0.9fr_1.1fr]">
-      <article class="rounded-[2rem] border border-black bg-black p-6 text-white md:p-8">
-        <p class="text-[0.62rem] font-semibold uppercase tracking-[0.34em] text-red-400">manifesto</p>
-        <h2 class="mt-4 text-4xl font-black uppercase leading-[0.9] tracking-[-0.06em] md:text-6xl">
-          We do not design for everyone.
-        </h2>
-        <p class="mt-5 max-w-lg text-sm leading-8 text-neutral-300">
-          WhÿClub sits closer to an editorial streetwear label than a catalog
-          business. Every graphic starts with a feeling. The product only ships
-          once the silhouette and the emotion land together.
-        </p>
-        <a href="/story" class="store-btn store-btn--inverse mt-8">
-          read the story
-        </a>
-      </article>
-
-      <div class="grid gap-4 md:grid-cols-3">
-        <article class="rounded-[2rem] border border-black bg-white p-6">
-          <p class="text-[0.62rem] font-semibold uppercase tracking-[0.32em] text-neutral-500">fabric</p>
-          <p class="mt-4 text-4xl font-black uppercase tracking-[-0.05em] text-black">260-280</p>
-          <p class="mt-2 text-sm leading-7 text-neutral-600">Heavyweight cotton that reads substantial from the first wear.</p>
-        </article>
-        <article class="rounded-[2rem] border border-black bg-white p-6">
-          <p class="text-[0.62rem] font-semibold uppercase tracking-[0.32em] text-neutral-500">sizes</p>
-          <p class="mt-4 text-4xl font-black uppercase tracking-[-0.05em] text-black">XS-XXL</p>
-          <p class="mt-2 text-sm leading-7 text-neutral-600">Oversized block calibrated for the intended drape, not guesswork.</p>
-        </article>
-        <article class="rounded-[2rem] border border-black bg-white p-6">
-          <p class="text-[0.62rem] font-semibold uppercase tracking-[0.32em] text-neutral-500">support</p>
-          <p class="mt-4 text-4xl font-black uppercase tracking-[-0.05em] text-black">7 days</p>
-          <p class="mt-2 text-sm leading-7 text-neutral-600">Returns, support, and prepaid-friendly shipping are already built into the flow.</p>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <section class="store-shell mx-auto max-w-7xl px-4 pb-12 md:px-6 md:pb-16">
-    <SectionHeader
-      eyebrow="proof"
-      title="Early signal, not corporate testimonial theatre."
-      body="Seeded review content from the original concept, carried forward into the Astro storefront."
+  </div>
+  <div class="block lg:hidden">
+    <MobileHome
+      heroProduct={heroProduct}
+      categories={categories}
+      trustItems={trustItems}
+      products={demoProducts}
     />
-    <div class="mt-8 grid gap-4 md:grid-cols-3">
-      {demoReviews.map((review) => <ReviewCard review={review} />)}
-    </div>
-  </section>
-
-  <section class="store-shell mx-auto max-w-7xl px-4 pb-12 md:px-6 md:pb-16">
-    <div class="grid gap-4 xl:grid-cols-[1fr_1fr]">
-      <div class="rounded-[2rem] border border-black bg-white p-6 md:p-8">
-        <SectionHeader
-          eyebrow="returns"
-          title="Serious support without the department-store tone."
-        />
-        <div class="mt-8 grid gap-4">
-          {returnsPolicy.map((item) => (
-            <article class="rounded-[1.5rem] border border-black/10 bg-[#f7f4ef] p-5">
-              <h3 class="text-lg font-black uppercase tracking-[0.04em] text-black">{item.title}</h3>
-              <p class="mt-3 text-sm leading-7 text-neutral-600">{item.body}</p>
-            </article>
-          ))}
-        </div>
-      </div>
-      <div class="rounded-[2rem] border border-black bg-white p-6 md:p-8">
-        <SectionHeader
-          eyebrow="faq"
-          title="Quick answers before support gets involved."
-        />
-        <div class="mt-8 grid gap-4">
-          {contactFaqs.map((item) => (
-            <article class="rounded-[1.5rem] border border-black/10 bg-[#f7f4ef] p-5">
-              <h3 class="text-lg font-black uppercase tracking-[0.04em] text-black">{item.question}</h3>
-              <p class="mt-3 text-sm leading-7 text-neutral-600">{item.answer}</p>
-            </article>
-          ))}
-        </div>
-      </div>
-    </div>
-  </section>
+  </div>
 </StorefrontLayout>

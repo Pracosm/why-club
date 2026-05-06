@@ -3,52 +3,75 @@ import StorefrontLayout from "@/layouts/StorefrontLayout.astro";
 import { demoProducts, siteCopy } from "@/lib/demo-data";
 ---
 
-<StorefrontLayout title="WhÿClub | story" description="The WhyClub brand story and product point of view.">
-  <section class="store-shell mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-16">
-    <div class="grid gap-4 xl:grid-cols-[0.95fr_1.05fr]">
-      <article class="rounded-[2rem] border border-black bg-black p-8 text-white">
-        <p class="text-[0.62rem] font-semibold uppercase tracking-[0.34em] text-red-400">our story</p>
-        <h1 class="mt-4 text-5xl font-black uppercase leading-[0.86] tracking-[-0.07em] md:text-7xl">
-          We started because everything else felt the same.
+<StorefrontLayout title="WhÿClub | Story" description="The WhyClub brand story and product point of view.">
+  <div class="redesign-root flex flex-col pt-8 pb-24 bg-[#F9F9F9]">
+
+    <!-- Editorial Hero -->
+    <section class="mx-auto flex max-w-7xl flex-col lg:flex-row items-center gap-12 px-6 py-12 xl:gap-24">
+      <article class="flex flex-1 flex-col justify-center">
+        <p class="text-[0.65rem] font-bold uppercase tracking-[0.3em] text-black/40 mb-4">Our Mission</p>
+        <h1 class="heading-condensed text-6xl font-black leading-[0.85] text-black md:text-[6.5rem]">
+          WHY <br />CLUB.
         </h1>
-        <p class="mt-6 text-base leading-8 text-neutral-300">
-          WhÿClub did not start with a trend deck. It started with the feeling that
-          every tee on the market looked safe. So the brand direction became simple:
-          fewer products, more intent, and graphics that actually say something.
+        <p class="font-editorial mt-8 text-lg font-semibold leading-relaxed text-black/80 max-w-lg">
+          We started because everything else felt the same. WhÿClub did not start with a trend deck—it started with a feeling.
+        </p>
+        <p class="font-editorial mt-6 text-sm leading-relaxed text-black/60 max-w-md">
+          In a world of mass-produced safety, we chose intent. Fewer products, more purpose, and graphics that actually speak the truth.
         </p>
       </article>
-      <div class="grid gap-4">
-        <div class="overflow-hidden rounded-[2rem] border border-black">
-          <img src={demoProducts[0].images[0]} alt={demoProducts[0].title} class="aspect-[4/3] w-full object-cover object-top" />
-        </div>
-        <div class="grid gap-4 md:grid-cols-2">
-          <article class="rounded-[2rem] border border-black bg-white p-6">
-            <p class="text-[0.62rem] font-semibold uppercase tracking-[0.3em] text-neutral-500">origin</p>
-            <p class="mt-4 text-4xl font-black uppercase tracking-[-0.05em] text-black">{siteCopy.originCity}</p>
-            <p class="mt-3 text-sm leading-7 text-neutral-600">The city that gave the brand its first late-night references and its first real customers.</p>
-          </article>
-          <article class="rounded-[2rem] border border-black bg-white p-6">
-            <p class="text-[0.62rem] font-semibold uppercase tracking-[0.3em] text-neutral-500">point of view</p>
-            <p class="mt-4 text-sm leading-7 text-neutral-600">
-              Feelings, not briefs. Community over clout. Streetwear that feels local and specific instead of imported by moodboard.
-            </p>
-          </article>
-        </div>
-      </div>
-    </div>
-  </section>
 
-  <section class="store-shell mx-auto max-w-7xl px-4 pb-16 md:px-6">
-    <div class="grid gap-4 md:grid-cols-3">
-      {
-        demoProducts.map((product) => (
-          <article class="rounded-[2rem] border border-black bg-white p-5">
-            <img src={product.images[0]} alt={product.title} class="aspect-[4/5] w-full rounded-[1.5rem] border border-black object-cover object-top" />
-            <h2 class="mt-5 text-2xl font-black uppercase tracking-[-0.05em] text-black">{product.title}</h2>
-            <p class="mt-3 text-sm leading-7 text-neutral-600">{product.story}</p>
+      <div class="relative flex-1 aspect-square lg:aspect-[4/5] rounded-[2.5rem] bg-[#F5F2EA] overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.05)]">
+        <img src={demoProducts[0].images[0]} alt="WhÿClub Aesthetic" class="h-full w-full object-cover object-top" />
+      </div>
+    </section>
+
+    <!-- Specific POV Grid -->
+    <section class="mx-auto w-full max-w-7xl px-6 mt-12">
+      <div class="grid gap-6 md:grid-cols-2">
+        <article class="rounded-[2rem] bg-white p-10 border border-black/5 shadow-sm">
+          <p class="text-[0.6rem] font-bold uppercase tracking-[0.3em] text-black/40 mb-3">Origin</p>
+          <h2 class="heading-condensed text-4xl font-black text-black mb-4">{siteCopy.originCity}</h2>
+          <p class="font-editorial text-sm leading-relaxed text-black/60">
+            The city that gave the brand its first late-night references and its first real customers. Mumbai isn't just our location—it's our pulse.
+          </p>
+        </article>
+        <article class="rounded-[2rem] bg-white p-10 border border-black/5 shadow-sm">
+          <p class="text-[0.6rem] font-bold uppercase tracking-[0.3em] text-black/40 mb-3">Philosophy</p>
+          <h2 class="heading-condensed text-4xl font-black text-black mb-4">Point of View</h2>
+          <p class="font-editorial text-sm leading-relaxed text-black/60">
+            Feelings, not briefs. Community over clout. Streetwear that feels local and specific instead of imported by moodboard.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- Product Stories -->
+    <section class="mx-auto mt-24 w-full max-w-7xl px-6">
+      <div class="mb-12 border-b border-black/5 pb-6">
+        <h2 class="heading-condensed text-4xl font-black">Collection Stories</h2>
+      </div>
+      <div class="grid gap-6 md:grid-cols-3">
+        {demoProducts.map((product) => (
+          <article class="group flex flex-col bg-white rounded-[2rem] p-4 border border-black/5 shadow-sm hover:border-black/10 transition-colors">
+            <div class="relative w-full aspect-[4/5] rounded-[1.5rem] overflow-hidden bg-[#F5F5F5] mb-6">
+              <img src={product.images[0]} alt={product.title} class="w-full h-full object-cover object-top smooth-transition group-hover:scale-105" />
+            </div>
+            <div class="px-2 pb-4">
+              <h3 class="font-editorial text-[0.7rem] font-bold uppercase tracking-widest text-black mb-3">{product.title}</h3>
+              <p class="font-editorial text-xs leading-relaxed text-black/60">
+                {product.story || "A deep dive into the graphics and material philosophy behind this drop."}
+              </p>
+            </div>
           </article>
-        ))
-      }
-    </div>
-  </section>
+        ))}
+      </div>
+    </section>
+
+    <!-- Footer Quote -->
+    <section class="mx-auto mt-24 text-center max-w-2xl px-6">
+      <h2 class="heading-condensed text-5xl font-black leading-none text-black/10">PERFECT IS BORING</h2>
+    </section>
+
+  </div>
 </StorefrontLayout>

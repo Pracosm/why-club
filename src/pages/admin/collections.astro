@@ -1,30 +1,8 @@
 ---
-import AdminTable from "@/components/admin/AdminTable.astro";
+import AdminLiveApp from "../../components/admin/AdminLiveApp.tsx";
 import AdminLayout from "@/layouts/AdminLayout.astro";
-import { demoCollections, getProductsByCollection } from "@/lib/demo-data";
 ---
 
 <AdminLayout title="WhÿClub admin | collections">
-  <div class="space-y-8">
-    <header class="space-y-3">
-      <p class="text-[0.68rem] uppercase tracking-[0.35em] text-neutral-500">collections</p>
-      <h1 class="font-display text-6xl leading-[0.9] tracking-[-0.09em] text-neutral-950">Plan future drops cleanly.</h1>
-      <p class="max-w-3xl text-sm leading-8 text-neutral-600">
-        The data model already treats collections as first-class records so future
-        launch calendars and editorial merchandising can stay tidy.
-      </p>
-    </header>
-
-    <AdminTable
-      title="Collection list"
-      description="Current collection coverage based on the seeded catalog."
-      columns={["Title", "Slug", "Products", "Active"]}
-      rows={demoCollections.map((collection) => [
-        collection.title,
-        collection.slug,
-        `${getProductsByCollection(collection.slug).length}`,
-        collection.isActive ? "yes" : "no",
-      ])}
-    />
-  </div>
+  <AdminLiveApp client:only="react" section="collections" />
 </AdminLayout>

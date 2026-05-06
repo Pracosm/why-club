@@ -4,39 +4,27 @@ import { formatInr } from "@/lib/utils";
 
 interface Props {
   product: DemoProduct;
+  showBadge?: boolean;
 }
 
-const { product } = Astro.props;
+const { product, showBadge = true } = Astro.props;
 const isDiscounted = product.sellingPrice < product.mrp;
 ---
 
-<article class="group relative overflow-hidden border border-black bg-white">
-  <a href={`/products/${product.slug}`} class="block">
-    <div class="relative overflow-hidden bg-[#f1ece2]">
-      <img
-        src={product.images[0]}
-        alt={product.title}
-        class="aspect-[3/4] w-full object-cover object-top transition duration-500 group-hover:scale-[1.04]"
-      />
-      <div class="absolute left-3 top-3 rounded-full border border-black bg-white/90 px-3 py-1 text-[0.58rem] font-semibold uppercase tracking-[0.28em] text-black">
-        {product.badge}
-      </div>
-      <div class="absolute inset-x-3 bottom-3 flex items-center justify-between gap-3 rounded-[1rem] border border-black bg-[rgba(255,255,255,0.82)] px-4 py-3 backdrop-blur">
-        <div class="min-w-0">
-          <h3 class="truncate text-[0.72rem] font-bold uppercase tracking-[0.18em] text-black">
-            {product.title}
-          </h3>
-          <p class="mt-1 text-[0.6rem] font-semibold uppercase tracking-[0.24em] text-neutral-500">
-            {product.material} · {product.weightGsm} gsm
-          </p>
-        </div>
-        <div class="shrink-0 text-right text-[0.72rem] font-bold uppercase tracking-[0.16em] text-black">
-          {formatInr(product.sellingPrice)}
-          {isDiscounted && (
-            <span class="ml-2 text-[0.6rem] text-neutral-400 line-through">{formatInr(product.mrp)}</span>
-          )}
-        </div>
-      </div>
+<article class="wc-product-card">
+  <a href={`/products/${product.slug}`} aria-label={`View ${product.title}`}>
+    <div class="wc-product-card__media">
+      <img src={product.images[0]} alt={product.title} loading="lazy" />
+      {showBadge && product.badge && <span class="wc-product-card__badge">{product.badge}</span>}
+      <button type="button" class="wc-product-card__heart" aria-label={`Save ${product.title}`}>♡</button>
+    </div>
+    <div class="wc-product-card__info">
+      <h3>{product.title}</h3>
+      <p>
+        {formatInr(product.sellingPrice)}
+        {isDiscounted && <span>{formatInr(product.mrp)}</span>}
+      </p>
+      {isDiscounted && <em>sale</em>}
     </div>
   </a>
 </article>

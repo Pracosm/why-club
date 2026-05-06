@@ -19,6 +19,7 @@ export const orderStatusValidator = v.union(
   v.literal("shipped"),
   v.literal("delivered"),
   v.literal("cancelled"),
+  v.literal("requires_review"),
 );
 
 export const paymentStatusValidator = v.union(
@@ -27,6 +28,12 @@ export const paymentStatusValidator = v.union(
   v.literal("captured"),
   v.literal("failed"),
   v.literal("refunded"),
+);
+
+export const checkoutModeValidator = v.union(
+  v.literal("signed_in"),
+  v.literal("guest_magic"),
+  v.literal("guest_standard"),
 );
 
 export const shippingAddressValidator = v.object({

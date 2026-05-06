@@ -1,5 +1,5 @@
 ---
-import { StorefrontClientBridge } from "@/components/react/StorefrontClient";
+import { StorefrontClientBridge } from "../components/react/StorefrontClient.tsx";
 import SiteFooter from "@/components/storefront/SiteFooter.astro";
 import SiteHeader from "@/components/storefront/SiteHeader.astro";
 import "@/styles/global.css";
@@ -24,13 +24,15 @@ const { title, description = "WhÿClub demo storefront" } = Astro.props;
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=JetBrains+Mono:wght@400;700&display=swap"
       rel="stylesheet"
     />
     <style is:global>
       :root {
-        --font-display: "Inter", sans-serif;
+        --font-display: "Instrument Serif", serif;
         --font-body: "Inter", sans-serif;
+        --font-editorial: "Newsreader", serif;
+        --font-mono: "JetBrains Mono", monospace;
       }
 
       body {
@@ -42,14 +44,13 @@ const { title, description = "WhÿClub demo storefront" } = Astro.props;
       }
     </style>
   </head>
-  <body class="text-neutral-950 antialiased">
+  <body class="text-neutral-950 antialiased bg-[#F9F9F9]">
+    <SiteHeader />
     <div class="relative min-h-screen overflow-x-hidden">
-      <div class="pointer-events-none absolute inset-0 opacity-60 store-grid-line"></div>
-      <div class="pointer-events-none absolute inset-x-0 top-0 h-[36rem] bg-[radial-gradient(circle_at_top,rgba(224,0,0,0.12),transparent_48%)]"></div>
-      <SiteHeader />
-      <main class="relative"><slot /></main>
-      <SiteFooter />
-      <StorefrontClientBridge client:load />
+      <!-- Site Content -->
+      <main class="relative z-10"><slot /></main>
+      <StorefrontClientBridge client:only="react" />
     </div>
+    <SiteFooter />
   </body>
 </html>

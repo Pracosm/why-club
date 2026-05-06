@@ -16,52 +16,65 @@ const products = collection ? getProductsByCollection(collection.slug) : [];
 <StorefrontLayout
   title={collection ? `WhÿClub | ${collection.title}` : "WhÿClub | collection not found"}
 >
-  {
-    collection ? (
-      <>
-        <section class="store-shell mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-16">
-          <article class="overflow-hidden rounded-[2rem] border border-black bg-white">
-            <div class="grid gap-0 xl:grid-cols-[0.88fr_1.12fr]">
-              <img src={collection.imageUrl} alt={collection.title} class="h-full min-h-[24rem] w-full object-cover object-top" />
-              <div class="flex flex-col justify-between p-6 md:p-8">
-                <div>
-                  <p class="text-[0.62rem] font-semibold uppercase tracking-[0.34em] text-red-600">collection</p>
-                  <h1 class="mt-4 text-4xl font-black uppercase leading-[0.88] tracking-[-0.06em] text-black md:text-6xl">
-                    {collection.title}
-                  </h1>
-                  <p class="mt-5 max-w-xl text-sm leading-8 text-neutral-600">{collection.description}</p>
+  <div class="redesign-root bg-[#F9F9F9] min-h-screen pb-24">
+    {
+      collection ? (
+        <>
+          <section class="mx-auto max-w-7xl px-5 md:px-6 pt-12 md:pt-20">
+            <article class="overflow-hidden rounded-[2rem] bg-white border border-black/5 shadow-sm">
+              <div class="grid gap-0 xl:grid-cols-[0.9fr_1.1fr]">
+                <div class="relative w-full aspect-[4/3] xl:aspect-auto xl:h-[32rem] bg-[#F5F5F5] overflow-hidden">
+                  <img src={collection.imageUrl} alt={collection.title} class="h-full w-full object-cover object-top" />
                 </div>
-                <div class="mt-10 flex flex-wrap gap-3 border-t border-black pt-5">
-                  <span class="rounded-full border border-black px-4 py-2 text-[0.62rem] font-semibold uppercase tracking-[0.28em] text-black">
-                    {products.length} styles
-                  </span>
-                  <a href="/cart" class="store-btn">
-                    view cart
-                  </a>
+                <div class="flex flex-col justify-between p-8 md:p-12 lg:p-16">
+                  <div>
+                    <span class="inline-block rounded-md bg-[#DFFF3F] px-2.5 py-1 text-[0.65rem] font-black uppercase tracking-widest text-black mb-6">
+                      Collection
+                    </span>
+                    <h1 class="heading-condensed text-5xl md:text-7xl font-black text-black leading-none mb-6">
+                      {collection.title}
+                    </h1>
+                    <p class="font-editorial text-sm leading-relaxed text-black/60 max-w-xl">
+                      {collection.description}
+                    </p>
+                  </div>
+                  <div class="mt-12 flex flex-wrap items-center gap-6 border-t border-black/5 pt-8">
+                    <span class="text-[0.65rem] font-bold uppercase tracking-widest text-black/40">
+                      {products.length} Styles
+                    </span>
+                    <a href="/cart" class="flex h-12 items-center justify-center rounded-full bg-black px-8 text-[0.65rem] font-bold uppercase tracking-widest text-white transition-transform active:scale-95 premium-shadow">
+                      View Cart
+                    </a>
+                  </div>
                 </div>
               </div>
-            </div>
-          </article>
-        </section>
+            </article>
+          </section>
 
-        <section class="store-shell mx-auto max-w-7xl px-4 pb-16 md:px-6">
-          <div class="grid gap-px overflow-hidden border border-black bg-black md:grid-cols-3">
-            {products.map((product) => (
-              <div class="bg-white">
-                <ProductCard product={product} />
-              </div>
-            ))}
-          </div>
+          <section class="mx-auto max-w-7xl px-5 md:px-6 pt-16">
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+              {products.map((product) => (
+                <div class="bg-white rounded-[1.5rem] p-3 border border-black/5 shadow-sm">
+                  <ProductCard product={product} />
+                </div>
+              ))}
+            </div>
+          </section>
+        </>
+      ) : (
+        <section class="mx-auto max-w-3xl px-5 py-32 text-center">
+          <span class="inline-block rounded-md bg-black/10 px-2.5 py-1 text-[0.65rem] font-black uppercase tracking-widest text-black mb-6">
+            404
+          </span>
+          <h1 class="heading-condensed text-5xl md:text-7xl font-black text-black mb-6">Collection Not Found</h1>
+          <p class="font-editorial text-sm text-black/60">
+            The requested collection slug does not exist in the current drop data.
+          </p>
+          <a href="/collections" class="mt-8 inline-flex h-12 items-center justify-center rounded-full bg-black px-8 text-[0.65rem] font-bold uppercase tracking-widest text-white transition-transform active:scale-95 premium-shadow">
+            Return to Shop
+          </a>
         </section>
-      </>
-    ) : (
-      <section class="store-shell mx-auto max-w-3xl px-4 py-20 text-center md:px-6">
-        <p class="text-[0.62rem] font-semibold uppercase tracking-[0.34em] text-neutral-500">404</p>
-        <h1 class="mt-4 text-5xl font-black uppercase tracking-[-0.06em] text-black">collection not found</h1>
-        <p class="mt-5 text-sm leading-7 text-neutral-600">
-          The requested collection slug does not exist in the current drop data.
-        </p>
-      </section>
-    )
-  }
+      )
+    }
+  </div>
 </StorefrontLayout>

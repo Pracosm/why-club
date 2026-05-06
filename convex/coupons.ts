@@ -1,7 +1,14 @@
+import { paginationOptsValidator } from "convex/server";
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 import { requireAnyRole } from "./lib/auth";
 import { appError } from "./lib/errors";
+import {
+  isCouponUsableAtCapture,
+  normalizeCouponCode,
+  validateCouponInput,
+} from "./lib/couponRules";
+import { computeDiscount } from "./lib/orderPricing";
 import { discountTypeValidator } from "./lib/validators";
 
 function isCouponUsable(coupon: {
@@ -14,26 +21,7 @@ function isCouponUsable(coupon: {
     return false;
   }
 
-  if (coupon.expiresAt && coupon.expiresAt < Date.now()) {
-    return false;
-  }
-
-  if (coupon.usageLimit !== undefined && coupon.usedCount >= coupon.usageLimit) {
-    return false;
-  }
-
-  return true;
-}
-
-function computeDiscount(
-  coupon: { discountType: "percentage" | "fixed"; discountValue: number },
-  subtotal: number,
-) {
-  if (coupon.discountType === "percentage") {
-    return Math.round((subtotal * coupon.discountValue) / 100);
-  }
-
-  return Math.min(subtotal, coupon.discountValue);
+  return isCouponUsableAtCapture(coupon, Date.now());
 }
 
 export const listAll = query({
@@ -41,6 +29,24 @@ export const listAll = query({
   handler: async (ctx) => {
     await requireAnyRole(ctx, ["super_admin", "admin"]);
     return await ctx.db.query("coupons").collect();
+  },
+});
+
+export const listAllPaginated = query({
+  args: {
+    paginationOpts: paginationOptsValidator,
+    isActive: v.optional(v.boolean()),
+  },
+  handler: async (ctx, args) => {
+    await requireAnyRole(ctx, ["super_admin", "admin"]);
+    if (args.isActive !== undefined) {
+      return await ctx.db
+        .query("coupons")
+        .withIndex("by_active", (q) => q.eq("isActive", args.isActive ?? false))
+        .paginate(args.paginationOpts);
+    }
+
+    return await ctx.db.query("coupons").paginate(args.paginationOpts);
   },
 });
 
@@ -52,7 +58,7 @@ export const validateCode = query({
   handler: async (ctx, args) => {
     const coupon = await ctx.db
       .query("coupons")
-      .withIndex("by_code", (q) => q.eq("code", args.code.toUpperCase()))
+      .withIndex("by_code", (q) => q.eq("code", normalizeCouponCode(args.code)))
       .unique();
 
     if (!coupon || !isCouponUsable(coupon)) {
@@ -78,6 +84,60 @@ export const validateCode = query({
   },
 });
 
+export const previewForAdmin = query({
+  args: {
+    code: v.string(),
+    subtotal: v.number(),
+  },
+  handler: async (ctx, args) => {
+    await requireAnyRole(ctx, ["super_admin", "admin"]);
+    const code = normalizeCouponCode(args.code);
+    const coupon = await ctx.db
+      .query("coupons")
+      .withIndex("by_code", (q) => q.eq("code", code))
+      .unique();
+
+    if (!coupon) {
+      return {
+        ok: false,
+        code,
+        discountAmount: 0,
+        finalTotal: Math.max(0, args.subtotal),
+        message: "Coupon code does not exist.",
+      };
+    }
+
+    if (!isCouponUsable(coupon)) {
+      return {
+        ok: false,
+        code,
+        discountAmount: 0,
+        finalTotal: Math.max(0, args.subtotal),
+        message: "Coupon is inactive, expired, or over its usage limit.",
+      };
+    }
+
+    if (args.subtotal < coupon.minOrderValue) {
+      return {
+        ok: false,
+        code,
+        discountAmount: 0,
+        finalTotal: Math.max(0, args.subtotal),
+        message: `Minimum order value is ₹${coupon.minOrderValue}.`,
+      };
+    }
+
+    const discountAmount = computeDiscount(coupon, args.subtotal);
+    return {
+      ok: true,
+      code,
+      discountAmount,
+      finalTotal: Math.max(0, args.subtotal - discountAmount),
+      message: `${coupon.code} applies ${discountAmount > 0 ? `₹${discountAmount}` : "no"} discount.`,
+    };
+  },
+});
+
 export const create = mutation({
   args: {
     code: v.string(),
@@ -91,7 +151,12 @@ export const create = mutation({
   },
   handler: async (ctx, args) => {
     await requireAnyRole(ctx, ["super_admin", "admin"]);
-    const code = args.code.toUpperCase();
+    const validationError = validateCouponInput(args);
+    if (validationError) {
+      throw appError("INVALID_INPUT", validationError);
+    }
+
+    const code = normalizeCouponCode(args.code);
     const existing = await ctx.db
       .query("coupons")
       .withIndex("by_code", (q) => q.eq("code", code))
@@ -130,7 +195,12 @@ export const update = mutation({
       throw appError("NOT_FOUND", "Coupon not found.");
     }
 
-    await ctx.db.patch("coupons", args.couponId, {
+    const validationError = validateCouponInput(args);
+    if (validationError) {
+      throw appError("INVALID_INPUT", validationError);
+    }
+
+    await ctx.db.patch(args.couponId, {
       title: args.title,
       discountType: args.discountType,
       discountValue: args.discountValue,
@@ -155,7 +225,7 @@ export const incrementUsage = mutation({
       throw appError("NOT_FOUND", "Coupon not found.");
     }
 
-    await ctx.db.patch("coupons", args.couponId, {
+    await ctx.db.patch(args.couponId, {
       usedCount: coupon.usedCount + 1,
       updatedAt: Date.now(),
     });

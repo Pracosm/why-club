@@ -1,36 +1,171 @@
 ---
-import SectionHeader from "@/components/storefront/SectionHeader.astro";
 import StorefrontLayout from "@/layouts/StorefrontLayout.astro";
 import { contactFaqs, siteCopy } from "@/lib/demo-data";
+
+/**
+ * PREMIUM UTILITARIAN MINIMALISM REDESIGN
+ * Protocol: minimalist-ui
+ * Aesthetic: Document-style, high-contrast warm monochrome, editorial serif.
+ */
+
+const channels = [
+  {
+    title: "Support",
+    label: "Email",
+    value: siteCopy.supportEmail,
+    href: `mailto:${siteCopy.supportEmail}`,
+    accent: "bg-[#EDF3EC]", // Pale Green
+    textColor: "text-[#346538]"
+  },
+  {
+    title: "Identity",
+    label: "Instagram",
+    value: siteCopy.instagramHandle,
+    href: "https://instagram.com/whyclub.in",
+    accent: "bg-[#E1F3FE]", // Pale Blue
+    textColor: "text-[#1F6C9F]"
+  },
+  {
+    title: "Urgent",
+    label: "WhatsApp",
+    value: "Live Concierge",
+    href: siteCopy.whatsappUrl,
+    accent: "bg-[#FDEBEC]", // Pale Red
+    textColor: "text-[#9F2F2D]"
+  },
+];
 ---
 
-<StorefrontLayout title="WhÿClub | contact">
-  <section class="store-shell mx-auto max-w-7xl px-4 py-12 md:px-6 md:py-16">
-    <div class="grid gap-4 xl:grid-cols-[0.9fr_1.1fr]">
-      <article class="rounded-[2rem] border border-black bg-black p-8 text-white">
-        <p class="text-[0.62rem] font-semibold uppercase tracking-[0.34em] text-red-400">contact</p>
-        <h1 class="mt-4 text-4xl font-black uppercase leading-[0.88] tracking-[-0.06em] md:text-6xl">
-          Need sizing help, a return, or just want to say hi?
-        </h1>
-        <div class="mt-8 grid gap-4 text-sm leading-7 text-neutral-300">
-          <p>Email: <a class="text-white" href={`mailto:${siteCopy.supportEmail}`}>{siteCopy.supportEmail}</a></p>
-          <p>Instagram: <a class="text-white" href="https://instagram.com/whyclub.in" target="_blank" rel="noreferrer">{siteCopy.instagramHandle}</a></p>
-          <p>WhatsApp: <a class="text-white" href={siteCopy.whatsappUrl} target="_blank" rel="noreferrer">open chat</a></p>
-          <p>Support replies currently target a 24-hour turnaround.</p>
-        </div>
-      </article>
+<StorefrontLayout title="WhÿClub | Contact" description="Connect with our editorial and support teams.">
+  <div class="bg-[#FBFBFA] min-h-screen font-body text-[#111111] selection:bg-[#FBF3DB] selection:text-[#956400]">
 
-      <article class="rounded-[2rem] border border-black bg-white p-8">
-        <SectionHeader eyebrow="faq" title="The quick answers." />
-        <div class="mt-8 grid gap-4">
-          {contactFaqs.map((item) => (
-            <article class="rounded-[1.5rem] border border-black/10 bg-[#f7f4ef] p-5">
-              <h2 class="text-lg font-black uppercase tracking-[0.04em] text-black">{item.question}</h2>
-              <p class="mt-3 text-sm leading-7 text-neutral-600">{item.answer}</p>
-            </article>
+    <main class="mx-auto max-w-5xl px-6 py-32">
+
+      <!-- Meta Header -->
+      <div class="mb-12 flex items-center gap-4 overflow-hidden scroll-reveal">
+        <span class="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-[#787774]">Registry 01 / Contact</span>
+        <div class="h-px flex-1 bg-[#EAEAEA]"></div>
+      </div>
+
+      <!-- Hero Section -->
+      <section class="mb-32 scroll-reveal">
+        <h1 class="font-display text-[15vw] md:text-[9rem] italic leading-[0.9] tracking-[-0.04em] text-[#111111]">
+          The Concierge.
+        </h1>
+        <div class="mt-12 max-w-2xl">
+          <p class="font-editorial text-xl md:text-3xl leading-[1.3] text-[#111111]/80">
+            Precision in dialogue. Whether it's a query about a drop, a return request, or a creative proposal, we engage with every message individually.
+          </p>
+        </div>
+      </section>
+
+      <!-- Channels: Bento Grid -->
+      <section class="grid gap-px bg-[#EAEAEA] border border-[#EAEAEA] overflow-hidden rounded-lg mb-48 scroll-reveal">
+        {channels.map((channel) => (
+          <a
+            href={channel.href}
+            class="group bg-white p-10 md:p-14 transition-all duration-300 hover:bg-[#F9F9F8] flex flex-col justify-between min-h-[300px]"
+          >
+            <div>
+              <div class={`inline-flex items-center gap-2 rounded-full px-3 py-1 ${channel.accent}`}>
+                <div class={`h-1.5 w-1.5 rounded-full ${channel.textColor.replace('text-', 'bg-')}`}></div>
+                <span class={`font-mono text-[0.55rem] uppercase tracking-widest ${channel.textColor}`}>
+                  {channel.title}
+                </span>
+              </div>
+            </div>
+
+            <div>
+              <p class="font-mono text-[0.6rem] uppercase tracking-[0.2em] text-[#787774] mb-2">{channel.label}</p>
+              <h3 class="font-display text-4xl text-[#111111] group-hover:italic transition-all">
+                {channel.value}
+              </h3>
+            </div>
+
+            <div class="flex justify-end opacity-0 group-hover:opacity-100 transition-opacity">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" stroke-linejoin="round">
+                <path d="M7 17l10-10M7 7h10v10"></path>
+              </svg>
+            </div>
+          </a>
+        ))}
+      </section>
+
+      <!-- FAQ Section -->
+      <section class="mb-64 scroll-reveal">
+        <div class="mb-16">
+          <h2 class="font-display text-5xl md:text-7xl leading-none tracking-tight italic">Common Inquiry.</h2>
+          <p class="mt-4 font-mono text-[0.65rem] uppercase tracking-[0.2em] text-[#787774]">Documented Responses</p>
+        </div>
+
+        <div class="border-t border-[#EAEAEA]">
+          {contactFaqs.map((faq) => (
+            <details class="group border-b border-[#EAEAEA] transition-all cursor-pointer">
+              <summary class="flex items-center justify-between py-10 list-none outline-none">
+                <h4 class="font-editorial text-2xl md:text-3xl text-[#111111] transition-all group-hover:pl-4">
+                  {faq.question}
+                </h4>
+                <div class="h-6 w-6 flex items-center justify-center transition-transform group-open:rotate-45">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                  </svg>
+                </div>
+              </summary>
+              <div class="pb-10 pl-4 md:pl-0 max-w-3xl">
+                <p class="font-body text-base md:text-lg leading-relaxed text-[#787774]">
+                  {faq.answer}
+                </p>
+              </div>
+            </details>
           ))}
         </div>
-      </article>
-    </div>
-  </section>
+      </section>
+
+      <!-- Availability Footer -->
+      <footer class="pt-32 border-t border-[#EAEAEA] flex flex-col md:flex-row justify-between items-start gap-8 scroll-reveal">
+        <div class="flex items-center gap-3">
+          <div class="h-2 w-2 rounded-full bg-[#346538] animate-pulse"></div>
+          <span class="font-mono text-[0.6rem] uppercase tracking-[0.4em] text-[#111111]">Response Loop Active</span>
+        </div>
+
+        <div class="max-w-xs">
+          <p class="font-mono text-[0.55rem] uppercase tracking-widest text-[#787774] leading-relaxed">
+            WhÿClub ensures all correspondence is logged and addressed within one business cycle.
+          </p>
+        </div>
+
+        <p class="font-mono text-[0.5rem] uppercase tracking-[0.5em] text-[#EAEAEA] hover:text-[#787774] transition-colors">
+          © 2026 WHŸCLUB
+        </p>
+      </footer>
+
+    </main>
+
+  </div>
 </StorefrontLayout>
+
+<style is:global>
+  .scroll-reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .scroll-reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.scroll-reveal').forEach((el) => observer.observe(el));
+</script>

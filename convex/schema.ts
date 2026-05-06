@@ -3,6 +3,7 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 import {
   discountTypeValidator,
+  checkoutModeValidator,
   orderItemSnapshotValidator,
   orderStatusValidator,
   paymentStatusValidator,
@@ -12,6 +13,7 @@ import {
 } from "./lib/validators";
 
 const { users: _authUsersTable, ...authOnlyTables } = authTables;
+void _authUsersTable;
 
 export default defineSchema({
   ...authOnlyTables,
@@ -87,7 +89,13 @@ export default defineSchema({
     .index("by_code", ["code"])
     .index("by_active", ["isActive"]),
   orders: defineTable({
-    userId: v.id("users"),
+    userId: v.optional(v.id("users")),
+    checkoutMode: v.optional(checkoutModeValidator),
+    customerEmail: v.optional(v.string()),
+    customerPhone: v.optional(v.string()),
+    customerName: v.optional(v.string()),
+    guestAccessTokenHash: v.optional(v.string()),
+    guestClaimedAt: v.optional(v.number()),
     totalAmount: v.number(),
     discountAmount: v.number(),
     currency: v.string(),
@@ -95,7 +103,7 @@ export default defineSchema({
     couponCode: v.optional(v.string()),
     status: orderStatusValidator,
     paymentStatus: paymentStatusValidator,
-    shippingAddress: shippingAddressValidator,
+    shippingAddress: v.optional(shippingAddressValidator),
     razorpayOrderId: v.optional(v.string()),
     razorpayPaymentId: v.optional(v.string()),
     shiprocketOrderId: v.optional(v.string()),
@@ -108,9 +116,28 @@ export default defineSchema({
   })
     .index("by_user", ["userId"])
     .index("by_user_and_status", ["userId", "status"])
+    .index("by_customer_email", ["customerEmail"])
     .index("by_razorpay_order", ["razorpayOrderId"])
     .index("by_razorpay_payment", ["razorpayPaymentId"])
-    .index("by_status", ["status"]),
+    .index("by_status", ["status"])
+    .index("by_payment_status", ["paymentStatus"])
+    .index("by_status_and_created_at", ["status", "createdAt"])
+    .index("by_created_at", ["createdAt"]),
+  orderEvents: defineTable({
+    orderId: v.id("orders"),
+    type: v.string(),
+    actor: v.union(
+      v.literal("system"),
+      v.literal("customer"),
+      v.literal("admin"),
+      v.literal("provider"),
+    ),
+    message: v.string(),
+    metadata: v.optional(
+      v.record(v.string(), v.union(v.string(), v.number(), v.boolean(), v.null())),
+    ),
+    createdAt: v.number(),
+  }).index("by_order", ["orderId"]),
   shippingUpdates: defineTable({
     orderId: v.id("orders"),
     awbCode: v.optional(v.string()),
@@ -121,6 +148,39 @@ export default defineSchema({
   })
     .index("by_order", ["orderId"])
     .index("by_awb", ["awbCode"]),
+  webhookEvents: defineTable({
+    provider: v.union(v.literal("razorpay"), v.literal("shiprocket")),
+    eventId: v.optional(v.string()),
+    eventType: v.string(),
+    payloadHash: v.string(),
+    status: v.union(
+      v.literal("processed"),
+      v.literal("ignored"),
+      v.literal("failed"),
+    ),
+    reason: v.optional(v.string()),
+    orderId: v.optional(v.id("orders")),
+    createdAt: v.number(),
+  })
+    .index("by_provider_event", ["provider", "eventId"])
+    .index("by_payload_hash", ["payloadHash"])
+    .index("by_order", ["orderId"]),
+  developerFeatureFlags: defineTable({
+    key: v.string(),
+    enabled: v.boolean(),
+    updatedBy: v.optional(v.id("users")),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  }).index("by_key", ["key"]),
+  authRateLimits: defineTable({
+    key: v.string(),
+    count: v.number(),
+    resetAt: v.number(),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index("by_key", ["key"])
+    .index("by_reset_at", ["resetAt"]),
   reviews: defineTable({
     productId: v.id("products"),
     userId: v.id("users"),
@@ -135,4 +195,11 @@ export default defineSchema({
     .index("by_product", ["productId"])
     .index("by_product_and_user", ["productId", "userId"])
     .index("by_approval", ["isApproved"]),
+  otpVerifications: defineTable({
+    email: v.string(),
+    codeHash: v.string(),
+    attempts: v.number(),
+    expiresAt: v.number(),
+    createdAt: v.number(),
+  }).index("by_email", ["email"]),
 });

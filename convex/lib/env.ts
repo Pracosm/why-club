@@ -6,7 +6,7 @@ function readOptional(name: string) {
 export function readRequiredEnv(name: string) {
   const value = readOptional(name);
   if (!value) {
-    throw new Error(`Missing required environment variable: ${name}`);
+    throw new Error(`${name} is required.`);
   }
   return value;
 }
@@ -26,4 +26,16 @@ export function getSuperAdminEmails() {
 
 export function isProdDeployment() {
   return (readOptional("CONVEX_DEPLOYMENT") ?? "").toLowerCase().includes("prod");
+}
+
+export function isProductionDeployment() {
+  return process.env.CONVEX_DEPLOYMENT?.startsWith("prod:") ?? false;
+}
+
+export function requireEnvInProduction(name: string) {
+  const value = readOptionalEnv(name);
+  if (!value && isProductionDeployment()) {
+    throw new Error(`${name} is required in production.`);
+  }
+  return value;
 }

@@ -1,0 +1,107 @@
+---
+import { formatInr } from "@/lib/utils";
+import type { demoProducts } from "@/lib/demo-data";
+import { ProductAddToCart } from "../../react/StorefrontClient.tsx";
+
+interface Props {
+  product: typeof demoProducts[0];
+  reviews: any[];
+}
+
+const { product, reviews } = Astro.props;
+---
+
+<div class="redesign-root flex flex-col pt-8 pb-24 bg-[#F9F9F9]">
+  <div class="mx-auto w-full max-w-7xl px-6 py-8">
+    <div class="grid gap-10 lg:grid-cols-[auto_1fr_0.8fr] xl:gap-16">
+
+      <!-- Left: Vertical Thumbnails -->
+      <div class="hidden lg:flex flex-col gap-4 w-20">
+        {product.images.map((img, index) => (
+          <button class={`relative aspect-square w-full rounded-xl overflow-hidden bg-[#F5F5F5] border ${index === 0 ? 'border-black' : 'border-black/5 hover:border-black/30'} transition-colors`}>
+            <img src={img} alt={`${product.title} view ${index + 1}`} class="h-full w-full object-cover object-top" loading="lazy" />
+          </button>
+        ))}
+      </div>
+
+      <!-- Center: Main Image -->
+      <div class="relative w-full aspect-[4/5] rounded-[2rem] bg-[#F5F5F5] overflow-hidden">
+        <img src={product.images[0]} alt={product.title} class="h-full w-full object-cover object-top" fetchpriority="high" loading="eager" />
+      </div>
+
+      <!-- Right: Product Info -->
+      <div class="relative flex flex-col pt-4">
+        <div class="mb-4 flex items-center gap-3">
+          {product.badge && (
+            <span class="rounded-md bg-[#DFFF3F] px-2.5 py-1 text-[0.65rem] font-black uppercase tracking-widest text-black">
+              {product.badge}
+            </span>
+          )}
+        </div>
+
+        <h1 class="heading-condensed text-5xl font-black leading-[0.85] text-black mb-3">
+          {product.title}
+        </h1>
+
+        <p class="font-editorial text-xs font-semibold text-black/60 mb-4">
+          {product.fit} Fit • 100% Premium Cotton • {product.weightGsm} GSM
+        </p>
+
+        <div class="flex items-center gap-3 mb-2">
+          <strong class="text-3xl font-black text-black">{formatInr(product.sellingPrice)}</strong>
+          {product.mrp > product.sellingPrice && (
+            <span class="text-base font-medium text-black/40 line-through mt-1">{formatInr(product.mrp)}</span>
+          )}
+        </div>
+
+        <div class="flex items-center gap-2 mb-8">
+          <span class="text-sm font-bold text-black/80">4.9</span>
+          <div class="flex text-black text-[0.7rem]">★★★★★</div>
+          <span class="text-xs text-black/50 ml-1">({reviews.length} reviews)</span>
+        </div>
+
+        <ProductAddToCart
+          client:only="react"
+          productSlug={product.slug}
+          productTitle={product.title}
+          priceLabel={formatInr(product.sellingPrice)}
+          availableSizes={product.sizes}
+          soldOutSizes={product.soldOutSizes}
+          checkoutHref={`/checkout?product=${product.slug}`}
+        />
+
+        <div class="mt-10">
+          <h3 class="font-editorial text-xs font-bold uppercase tracking-widest text-black mb-3">Description</h3>
+          <p class="font-editorial text-sm leading-relaxed text-black/70 mb-4">
+            <strong class="text-black block mb-1">A bold handprint. A bolder statement.</strong>
+            The {product.title} is treated from heavyweight {product.weightGsm} GSM custom for a structured drape and all-day comfort.
+          </p>
+
+          <ul class="flex flex-col gap-2 text-sm text-black/70 font-medium mb-8 list-disc pl-4">
+            <li>100% premium cotton</li>
+            <li>Oversized fit</li>
+            <li>High quality screen print</li>
+            <li>Made in India</li>
+          </ul>
+        </div>
+
+        <div class="mt-auto border-t border-black/5 pt-8">
+          <div class="grid grid-cols-3 gap-2">
+            <div class="flex flex-col items-center text-center">
+              <span aria-hidden="true" class="mb-2 text-lg leading-none text-black opacity-80">◇</span>
+              <span class="text-[0.45rem] font-bold uppercase tracking-widest text-black leading-tight mb-1">100% Premium<br/>Cotton</span>
+            </div>
+            <div class="flex flex-col items-center text-center">
+              <span aria-hidden="true" class="mb-2 text-lg leading-none text-black opacity-80">↻</span>
+              <span class="text-[0.45rem] font-bold uppercase tracking-widest text-black leading-tight mb-1">Easy Returns<br/>7 Day Policy</span>
+            </div>
+            <div class="flex flex-col items-center text-center">
+              <span aria-hidden="true" class="mb-2 text-lg leading-none text-black opacity-80">▭</span>
+              <span class="text-[0.45rem] font-bold uppercase tracking-widest text-black leading-tight mb-1">Secure Payment<br/>UPI, Cards & More</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

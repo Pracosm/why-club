@@ -1,4 +1,9 @@
 {
+  // Deploy the storefront Worker behind the Cloudflare zone for whyclub.store.
+  // Add routes/custom domains in the Cloudflare dashboard after DNS is active:
+  // - whyclub.store
+  // - www.whyclub.store
+  // - admin.whyclub.store when PUBLIC_ENABLE_ADMIN_SUBDOMAIN=true
   "compatibility_date": "2026-04-08",
   "compatibility_flags": ["global_fetch_strictly_public"],
   "name": "whyclub-ecommerce",
@@ -9,5 +14,13 @@
   },
   "observability": {
     "enabled": true
+  },
+  "vars": {
+    "PUBLIC_APP_NAME": "WhÿClub",
+    "PUBLIC_SITE_URL": "https://whyclub.store",
+    "PUBLIC_ENABLE_ADMIN_SUBDOMAIN": "true",
+    "PUBLIC_ADMIN_HOST": "admin.whyclub.store",
+    "PUBLIC_RAZORPAY_CHECKOUT_MODE": "magic",
+    "PUBLIC_TURNSTILE_SITE_KEY": ""
   }
 }

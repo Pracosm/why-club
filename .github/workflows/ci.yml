@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.12.0"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run CI checks
+        run: npm run ci
+        env:
+          PUBLIC_SITE_URL: http://localhost:4321
+          PUBLIC_APP_NAME: WhÿClub
+          PUBLIC_CONVEX_URL: https://example.convex.cloud
+          PUBLIC_RAZORPAY_KEY_ID: test_key_for_build_only
+          PUBLIC_RAZORPAY_CHECKOUT_MODE: standard
+          PUBLIC_ENABLE_ADMIN_SUBDOMAIN: "false"
+          PUBLIC_ADMIN_HOST: admin.localhost

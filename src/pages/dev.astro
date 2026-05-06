@@ -1,0 +1,11 @@
+---
+import DeveloperDashboard from "@/components/developer/DeveloperDashboard";
+import AdminLayout from "@/layouts/AdminLayout.astro";
+---
+
+<AdminLayout
+  title="WhÿClub developer console"
+  description="Developer controls for feature flags and runtime diagnostics."
+>
+  <DeveloperDashboard client:only="react" />
+</AdminLayout>

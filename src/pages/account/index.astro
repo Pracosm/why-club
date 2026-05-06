@@ -1,5 +1,5 @@
 ---
-import AccountOverviewPanel from "@/components/account/AccountOverviewPanel";
+import AccountOverviewPanel from "../../components/account/AccountOverviewPanel.tsx";
 import StorefrontLayout from "@/layouts/StorefrontLayout.astro";
 ---
 
@@ -7,5 +7,5 @@ import StorefrontLayout from "@/layouts/StorefrontLayout.astro";
   title="WhÿClub | account"
   description="Customer account overview for orders, auth state, and checkout continuity."
 >
-  <AccountOverviewPanel client:load />
+  <AccountOverviewPanel client:only="react" />
 </StorefrontLayout>

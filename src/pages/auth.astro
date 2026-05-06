@@ -1,11 +1,3 @@
 ---
-import AuthExperience from "@/components/account/AuthExperience";
-import StorefrontLayout from "@/layouts/StorefrontLayout.astro";
+return Astro.redirect("/login", 302);
 ---
-
-<StorefrontLayout
-  title="WhÿClub | auth"
-  description="Sign in or sign up for the WhyClub storefront account experience."
->
-  <AuthExperience client:load />
-</StorefrontLayout>
